@@ -1,9 +1,14 @@
+using System.Configuration;
+using System.Data;
+using System.Drawing;
 using corebankigtest.Entities;
 using corebankigtest.Forms;
+using Microsoft.Data.SqlClient;
 namespace corebankigtest
 {
     public partial class LoginForm : Form
     {
+        string cs =ConfigurationManager.ConnectionStrings["dbcs"].ConnectionString;
         private List<Employee> _employees = new List<Employee>();
         public LoginForm()
         {
@@ -34,26 +39,26 @@ namespace corebankigtest
             InitializeComponent();
 
         }
-        
 
-            //    foreach (var employee in _employees)
-            //    {
-            //        if (employee.UserName == username && employee.Password== password)
-            //        {
-            //            LoginFailed = false;
-            //            break;
-            //        }
-            //    }
-            //    if(LoginFailed)
-            //    {
-            //        MessageBox.Show("Invlid username or password!", "Login Failed");
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show($"Welcome {UserNameTextBox.Text}.","Login successfully");
 
-            //    }
-            //}
+        //    foreach (var employee in _employees)
+        //    {
+        //        if (employee.UserName == username && employee.Password== password)
+        //        {
+        //            LoginFailed = false;
+        //            break;
+        //        }
+        //    }
+        //    if(LoginFailed)
+        //    {
+        //        MessageBox.Show("Invlid username or password!", "Login Failed");
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show($"Welcome {UserNameTextBox.Text}.","Login successfully");
+
+        //    }
+        //}
 
         private void RegisterButton_Click(object sender, EventArgs e)
         {
@@ -95,18 +100,67 @@ namespace corebankigtest
             //    MessageBox.Show("Invalid username or password!", "Login failed");
 
             //}
-            if(_employees.Any(LoginValidator))
+            string username = UserNameTextBox.Text.Trim();
+            string password = PasswordTextBox.Text.Trim();
+            if (username == "" || password == "")
             {
-                Hide();
-                HomeForm homeForm =new(this);
-                homeForm.ShowDialog();
+                MessageBox.Show("Enter Username and Password");
+                return;
             }
-            else
+            using (SqlConnection con = new SqlConnection(cs))
             {
-                MessageBox.Show("Invalid username or password!", "Login Failed");
-            }
+                con.Open();
+                string sql = @"SELECT ID,Username,Role from users 
+                     where Username=@u
+                    AND [Password]=@p
+                    AND IsActive=1";
 
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@U", username);
+                    cmd.Parameters.AddWithValue("@p", password);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            int id = reader.GetInt32(0);
+                            string user = reader.GetString(1);
+                            string role = reader.GetString(2);
+                            MessageBox.Show($"Welcome {user} (Role:{role})");
+                            HomeForm home = new HomeForm(user, role);
+                            home.Show();
+
+                            this.Hide();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Invalid username or password");
+                        }
+
+                    }
+
+                }
+            }
         }
+        
+                //var loginform = new LoginForm();
+                //var result = loginform.ShowDialog();
+                //if (result == DialogResult.OK)
+                //{
+
+
+                //    if (_employees.Any(LoginValidator))
+                //    {
+                //        Hide();
+                //        HomeForm homeForm = new(this);
+                //        homeForm.ShowDialog();
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show("Invalid username or password!", "Login Failed");
+                //    }
+
+                //}
 
         private bool LoginValidator(Employee employee)
         {
@@ -117,9 +171,9 @@ namespace corebankigtest
         }
         public void ResetTextBox()
         {
-            UserNameTextBox.Text=string.Empty;
-            PasswordTextBox.Text=string.Empty;
+            UserNameTextBox.Text = string.Empty;
+            PasswordTextBox.Text = string.Empty;
         }
     }
-    }
+}
 

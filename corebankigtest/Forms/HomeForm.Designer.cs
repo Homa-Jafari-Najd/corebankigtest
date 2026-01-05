@@ -64,6 +64,7 @@
             Name = "HomeForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "HomeForm";
+            Load += HomeForm_Load;
             ResumeLayout(false);
         }
 

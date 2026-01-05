@@ -12,7 +12,9 @@ namespace corebankigtest.Forms
             _loginForm = loginForm;
 
             InitializeComponent();
-        }public HomeForm(string user, string role) {
+        }
+        public HomeForm(string user, string role)
+        {
             _user = user;
             _role = role;
         }
@@ -28,6 +30,11 @@ namespace corebankigtest.Forms
         {
             var form = new AccountManagmentForm();
             form.Show();
+        }
+
+        private void HomeForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,4 +1,3 @@
-using System.Configuration;
 using System.Data;
 using System.Drawing;
 using corebankigtest.Entities;
@@ -8,7 +7,8 @@ namespace corebankigtest
 {
     public partial class LoginForm : Form
     {
-        string cs =ConfigurationManager.ConnectionStrings["dbcs"].ConnectionString;
+        //string cs =ConfigurationManager.ConnectionStrings["dbcs"].ConnectionString;
+        string cs = "server=.;Database=OrderManagementDB;Trusted_Connection=True;TrustServerCertificate=True;";
         private List<Employee> _employees = new List<Employee>();
         public LoginForm()
         {
@@ -127,9 +127,14 @@ namespace corebankigtest
                             string user = reader.GetString(1);
                             string role = reader.GetString(2);
                             MessageBox.Show($"Welcome {user} (Role:{role})");
-                            HomeForm home = new HomeForm(user, role);
-                            home.Show();
+                            //HomeForm home = new HomeForm(user, role);
+                            //home.Show();
 
+                            //this.Hide();
+                            AccountManagmentForm accountForm = new AccountManagmentForm();
+                            accountForm.FormClosed += (s, args) => this.Close();
+
+                            accountForm.Show();
                             this.Hide();
                         }
                         else

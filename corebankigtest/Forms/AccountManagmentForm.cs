@@ -82,7 +82,7 @@ namespace corebankigtest.Forms
                 AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
                 {
                     HeaderText = "Account Number",
-                    DataPropertyName = "AccountName",
+                    DataPropertyName = "AccountNumber",
                     ReadOnly = true
                  });
                 AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn

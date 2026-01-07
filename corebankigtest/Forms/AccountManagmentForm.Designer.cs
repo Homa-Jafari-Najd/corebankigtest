@@ -38,6 +38,9 @@
             LastName = new DataGridViewTextBoxColumn();
             NationalCode = new DataGridViewTextBoxColumn();
             AccountType = new DataGridViewTextBoxColumn();
+            btnPrev = new Button();
+            btnNext = new Button();
+            lblPage = new Label();
             ((System.ComponentModel.ISupportInitialize)AccountDataGridView).BeginInit();
             SuspendLayout();
             // 
@@ -121,18 +124,50 @@
             AccountType.MinimumWidth = 8;
             AccountType.Name = "AccountType";
             // 
+            // btnPrev
+            // 
+            btnPrev.Location = new Point(12, 572);
+            btnPrev.Name = "btnPrev";
+            btnPrev.Size = new Size(112, 34);
+            btnPrev.TabIndex = 4;
+            btnPrev.Text = "Previous";
+            btnPrev.UseVisualStyleBackColor = true;
+            btnPrev.Click += btnPrev_Click;
+            // 
+            // btnNext
+            // 
+            btnNext.Location = new Point(1081, 572);
+            btnNext.Name = "btnNext";
+            btnNext.Size = new Size(112, 34);
+            btnNext.TabIndex = 5;
+            btnNext.Text = "Next";
+            btnNext.UseVisualStyleBackColor = true;
+            btnNext.Click += btnNext_Click;
+            // 
+            // lblPage
+            // 
+            lblPage.AutoSize = true;
+            lblPage.Location = new Point(547, 577);
+            lblPage.Name = "lblPage";
+            lblPage.Size = new Size(65, 25);
+            lblPage.TabIndex = 6;
+            lblPage.Text = "Page 1";
+            // 
             // AccountManagmentForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1205, 618);
+            Controls.Add(lblPage);
+            Controls.Add(btnNext);
+            Controls.Add(btnPrev);
             Controls.Add(AccountDataGridView);
             Controls.Add(SearchButton);
             Controls.Add(NationalCodeTextBox);
             Controls.Add(label1);
             Name = "AccountManagmentForm";
             Text = "AccountManagmentForm";
-            Load += AccountManagmentForm_Load;
+            Load += this.AccountManagementForm_Load;
             ((System.ComponentModel.ISupportInitialize)AccountDataGridView).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -150,5 +185,8 @@
         private DataGridViewTextBoxColumn LastName;
         private DataGridViewTextBoxColumn NationalCode;
         private DataGridViewTextBoxColumn AccountType;
+        private Button btnPrev;
+        private Button btnNext;
+        private Label lblPage;
     }
 }

@@ -62,6 +62,7 @@
             NationalCodeTextBox.Name = "NationalCodeTextBox";
             NationalCodeTextBox.Size = new Size(871, 31);
             NationalCodeTextBox.TabIndex = 1;
+            NationalCodeTextBox.MaskInputRejected += NationalCodeTextBox_MaskInputRejected;
             // 
             // SearchButton
             // 
@@ -167,7 +168,7 @@
             Controls.Add(label1);
             Name = "AccountManagmentForm";
             Text = "AccountManagmentForm";
-            Load += this.AccountManagementForm_Load;
+            Load += AccountManagementForm_Load;
             ((System.ComponentModel.ISupportInitialize)AccountDataGridView).EndInit();
             ResumeLayout(false);
             PerformLayout();

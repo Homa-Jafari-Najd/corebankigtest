@@ -14,12 +14,50 @@ namespace corebankigtest.Forms
         private int pageSize = 5;
         private int totalPages = 1;
         private int totalRecords = 0;
+        string currentSearch = "";
 
-        
+
         public AccountManagmentForm()
         {
             InitializeComponent();
-            
+
+        }
+        string cs = "Server=.;Database=CoreBankingDB;Trusted_Connection=True;TrustServerCertificate=True;";
+
+        private void LoadAccounts(string search = "")
+        {
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                string sql = @"
+SELECT 
+    a.Id,
+    a.AccountNumber,
+    a.Balance,
+    a.CustomerId,
+    c.FirstName,
+    c.LastName,
+    c.NationalCode
+FROM dbo.Account a
+INNER JOIN dbo.Customer c ON c.Id = a.CustomerId
+WHERE
+    (@s = '' 
+     OR a.AccountNumber LIKE '%' + @s + '%'
+     OR c.NationalCode LIKE '%' + @s + '%'
+     OR (c.FirstName + ' ' + c.LastName) LIKE '%' + @s + '%')
+ORDER BY a.Id DESC;
+";
+
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@s", search);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+
+                    AccountDataGridView.DataSource = dt;
+                }
+            }
         }
         private void UpdatePageLabel()
         {
@@ -49,7 +87,7 @@ namespace corebankigtest.Forms
         //    AccountDataGridView.AutoGenerateColumns = true;
         //    AccountDataGridView.DataSource = data;
         //}
-       
+
 
         private void AccountDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -58,21 +96,43 @@ namespace corebankigtest.Forms
 
         private void SearchButton_Click(object sender, EventArgs e)
         {
+            pageNumber = 1;
+
+            string s = NationalCodeTextBox.Text
+                .Replace("-", "")
+                .Replace("_", "")
+                .Trim();
+
+            currentSearch = s;                 // اینو برای Next/Prev نگه می‌داریم
+            LoadAccountsFromDB(currentSearch);
+            UpdatePageLabel();
+
         }
 
         private void maskedTextBox1_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
         {
 
         }
-        private void LoadAccountsFromDB()
+        private void LoadAccountsFromDB(string search = "")
         {
             using (var con = new SqlConnection(_cs))
             {
                 con.Open();
-                using (var countCmd = new SqlCommand("Select COUNT(*) FROM Account", con))
+                using (var countCmd = new SqlCommand(@"
+SELECT COUNT(*)
+FROM Account a
+INNER JOIN Customer c ON c.Id = a.CustomerId
+WHERE
+(
+    @Search = ''
+    OR a.AccountNumber LIKE '%' + @Search + '%'
+    OR REPLACE(c.NationalCode,'-','') LIKE '%' + REPLACE(@Search,'-','') + '%'
+    OR (c.FirstName + ' ' + c.LastName) LIKE '%' + @Search + '%'
+)
+", con))
                 {
+                    countCmd.Parameters.AddWithValue("@Search", search);
                     totalRecords = (int)countCmd.ExecuteScalar();
-                    con.Close();
                 }
                 totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
                 using (var cmd = new SqlCommand("sp_GETAccountsPaged", con))
@@ -80,6 +140,7 @@ namespace corebankigtest.Forms
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@PageNumber", pageNumber);
                     cmd.Parameters.AddWithValue("@PageSize", pageSize);
+                    cmd.Parameters.AddWithValue("@Search", search);
 
                     var dt = new DataTable();
                     using (var da = new SqlDataAdapter(cmd))
@@ -129,7 +190,7 @@ namespace corebankigtest.Forms
         private void AccountManagementForm_Load(object sender, EventArgs e)
         {
             pageNumber = 1;
-            LoadAccountsFromDB();
+            LoadAccountsFromDB("");
             UpdatePageLabel();
 
         }
@@ -141,23 +202,27 @@ namespace corebankigtest.Forms
 
         private void btnPrev_Click(object sender, EventArgs e)
         {
-            if(pageNumber>1)
+            if (pageNumber > 1)
             {
                 pageNumber--;
-                LoadAccountsFromDB();
+                LoadAccountsFromDB(currentSearch);
                 UpdatePageLabel();
             }
-           
+
         }
 
         private void btnNext_Click(object sender, EventArgs e)
         {
             pageNumber++;
-            LoadAccountsFromDB();
+            LoadAccountsFromDB(currentSearch);
             UpdatePageLabel();
         }
-      
+
+        private void NationalCodeTextBox_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
+        {
+
+        }
     }
-    
-   
+
+
 }

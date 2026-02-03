@@ -1,4 +1,3 @@
 <Solution>
   <Project Path="corebankigtest/corebankigtest.csproj" />
-  <Project Path="OrderManagement.WinForms/OrderManagement.WinForms.csproj" Id="63dda75f-c7a4-4753-b5f1-8fa82ca64b7d" />
 </Solution>

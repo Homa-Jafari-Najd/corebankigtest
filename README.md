@@ -13,7 +13,15 @@ Includes account management, CRUD operations, and pagination using stored proced
 - C# / .NET (WinForms)
 - SQL Server
 - ADO.NET
+## 🏗 Architecture
 
+This project follows a simple 3-layer architecture:
+
+- Entities – Domain models (Account, Customer, Employee)
+- DAL (Data Access Layer) – SQL Server access using ADO.NET + Stored Procedures
+- BLL (Business Logic Layer) – Business rules and validations
+- Forms (UI) – WinForms presentation layer
+  
 ## 📸 Screenshots
 ### Login
 ![Login](https://raw.githubusercontent.com/homaii/corebankigtest/master/Login%20Form.png)

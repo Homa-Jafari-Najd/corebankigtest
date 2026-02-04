@@ -7,12 +7,11 @@ namespace corebankigtest.Entities
 {
     public class Customer
     {
-        public int CustomerId { get; set; }
-        public string? CustomerFirstName { get; set; }
-        public string? CustomerLastName { get; set; }
+        public int Id { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
 
-        public string? CustomerNationalCode { get; set; }
+        public string? NationalCode { get; set; }
 
-        public List<Account> Accounts { get; set; } = new List<Account>();
     }
 }

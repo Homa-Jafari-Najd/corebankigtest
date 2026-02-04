@@ -29,8 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DAL\" />
-    <Folder Include="BLL\" />
     <Folder Include="Screenshots\" />
   </ItemGroup>
 

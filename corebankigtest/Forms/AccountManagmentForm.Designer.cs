@@ -32,15 +32,15 @@
             NationalCodeTextBox = new MaskedTextBox();
             SearchButton = new Button();
             AccountDataGridView = new DataGridView();
+            btnPrev = new Button();
+            btnNext = new Button();
+            lblPage = new Label();
             AccountNumber = new DataGridViewTextBoxColumn();
             OpeningDate = new DataGridViewTextBoxColumn();
             FirstName = new DataGridViewTextBoxColumn();
             LastName = new DataGridViewTextBoxColumn();
             NationalCode = new DataGridViewTextBoxColumn();
             AccountType = new DataGridViewTextBoxColumn();
-            btnPrev = new Button();
-            btnNext = new Button();
-            lblPage = new Label();
             ((System.ComponentModel.ISupportInitialize)AccountDataGridView).BeginInit();
             SuspendLayout();
             // 
@@ -88,43 +88,6 @@
             AccountDataGridView.TabIndex = 3;
             AccountDataGridView.CellContentClick += AccountDataGridView_CellContentClick;
             // 
-            // AccountNumber
-            // 
-            AccountNumber.DataPropertyName = "Account Number";
-            AccountNumber.HeaderText = "Account Number";
-            AccountNumber.MinimumWidth = 8;
-            AccountNumber.Name = "AccountNumber";
-            // 
-            // OpeningDate
-            // 
-            OpeningDate.HeaderText = "Opening Date";
-            OpeningDate.MinimumWidth = 8;
-            OpeningDate.Name = "OpeningDate";
-            // 
-            // FirstName
-            // 
-            FirstName.HeaderText = "First Name";
-            FirstName.MinimumWidth = 8;
-            FirstName.Name = "FirstName";
-            // 
-            // LastName
-            // 
-            LastName.HeaderText = "Last Name";
-            LastName.MinimumWidth = 8;
-            LastName.Name = "LastName";
-            // 
-            // NationalCode
-            // 
-            NationalCode.HeaderText = "National Code";
-            NationalCode.MinimumWidth = 8;
-            NationalCode.Name = "NationalCode";
-            // 
-            // AccountType
-            // 
-            AccountType.HeaderText = "Account Type";
-            AccountType.MinimumWidth = 8;
-            AccountType.Name = "AccountType";
-            // 
             // btnPrev
             // 
             btnPrev.Location = new Point(12, 572);
@@ -154,6 +117,45 @@
             lblPage.TabIndex = 6;
             lblPage.Text = "Page 1";
             // 
+            // AccountNumber
+            // 
+            AccountNumber.DataPropertyName = "Account Number";
+            AccountNumber.HeaderText = "Account Number";
+            AccountNumber.MinimumWidth = 8;
+            AccountNumber.Name = "AccountNumber";
+            // 
+            // OpeningDate
+            // 
+            OpeningDate.DataPropertyName = "CreateDate";
+            OpeningDate.HeaderText = "Opening Date";
+            OpeningDate.MinimumWidth = 8;
+            OpeningDate.Name = "OpeningDate";
+            // 
+            // FirstName
+            // 
+            FirstName.HeaderText = "First Name";
+            FirstName.MinimumWidth = 8;
+            FirstName.Name = "FirstName";
+            // 
+            // LastName
+            // 
+            LastName.HeaderText = "Last Name";
+            LastName.MinimumWidth = 8;
+            LastName.Name = "LastName";
+            // 
+            // NationalCode
+            // 
+            NationalCode.HeaderText = "National Code";
+            NationalCode.MinimumWidth = 8;
+            NationalCode.Name = "NationalCode";
+            // 
+            // AccountType
+            // 
+            AccountType.DataPropertyName = "AccountType";
+            AccountType.HeaderText = "Account Type";
+            AccountType.MinimumWidth = 8;
+            AccountType.Name = "AccountType";
+            // 
             // AccountManagmentForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -180,14 +182,14 @@
         private MaskedTextBox NationalCodeTextBox;
         private Button SearchButton;
         private DataGridView AccountDataGridView;
+        private Button btnPrev;
+        private Button btnNext;
+        private Label lblPage;
         private DataGridViewTextBoxColumn AccountNumber;
         private DataGridViewTextBoxColumn OpeningDate;
         private DataGridViewTextBoxColumn FirstName;
         private DataGridViewTextBoxColumn LastName;
         private DataGridViewTextBoxColumn NationalCode;
         private DataGridViewTextBoxColumn AccountType;
-        private Button btnPrev;
-        private Button btnNext;
-        private Label lblPage;
     }
 }

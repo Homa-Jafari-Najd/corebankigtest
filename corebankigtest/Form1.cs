@@ -1,8 +1,8 @@
 using System.Data;
-using System.Drawing;
 using corebankigtest.Entities;
 using corebankigtest.Forms;
 using Microsoft.Data.SqlClient;
+using corebankingtest.Utilities;
 namespace corebankigtest
 {
     public partial class LoginForm : Form
@@ -10,6 +10,7 @@ namespace corebankigtest
         //string cs =ConfigurationManager.ConnectionStrings["dbcs"].ConnectionString;
         string cs = "server=.;Database=OrderManagementDB;Trusted_Connection=True;TrustServerCertificate=True;";
         private List<Employee> _employees = new List<Employee>();
+        private string currentCaptcha;
         public LoginForm()
         {
             var employee1 = new Employee();
@@ -37,7 +38,14 @@ namespace corebankigtest
             _employees.AddRange(employee1, employee2);
 
             InitializeComponent();
+            LoadCaptcha();
 
+
+        }
+        private void LoadCaptcha()
+        {
+            currentCaptcha = CaptchaGenerator.GenerateCode();
+            pictureBoxCaptcha.Image = CaptchaGenerator.GenerateImage(currentCaptcha);
         }
 
 
@@ -107,6 +115,22 @@ namespace corebankigtest
                 MessageBox.Show("Enter Username and Password");
                 return;
             }
+            using (SqlConnection con = new SqlConnection())
+            {
+                if (string.IsNullOrWhiteSpace(txtCaptcha.Text))
+                {
+                    MessageBox.Show("Please enter captcha");
+                    return;
+                }
+
+                if (txtCaptcha.Text.Trim().ToUpper() != currentCaptcha.ToUpper())
+                {
+                    MessageBox.Show("Captcha is incorrect");
+                    txtCaptcha.Clear();
+                    LoadCaptcha();
+                    return;
+                }
+            }
             using (SqlConnection con = new SqlConnection(cs))
             {
                 con.Open();
@@ -147,25 +171,25 @@ namespace corebankigtest
                 }
             }
         }
-        
-                //var loginform = new LoginForm();
-                //var result = loginform.ShowDialog();
-                //if (result == DialogResult.OK)
-                //{
+
+        //var loginform = new LoginForm();
+        //var result = loginform.ShowDialog();
+        //if (result == DialogResult.OK)
+        //{
 
 
-                //    if (_employees.Any(LoginValidator))
-                //    {
-                //        Hide();
-                //        HomeForm homeForm = new(this);
-                //        homeForm.ShowDialog();
-                //    }
-                //    else
-                //    {
-                //        MessageBox.Show("Invalid username or password!", "Login Failed");
-                //    }
+        //    if (_employees.Any(LoginValidator))
+        //    {
+        //        Hide();
+        //        HomeForm homeForm = new(this);
+        //        homeForm.ShowDialog();
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("Invalid username or password!", "Login Failed");
+        //    }
 
-                //}
+        //}
 
         private bool LoginValidator(Employee employee)
         {
@@ -179,6 +203,31 @@ namespace corebankigtest
             UserNameTextBox.Text = string.Empty;
             PasswordTextBox.Text = string.Empty;
         }
+
+        private void pictureBoxCaptcha_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtCaptcha_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBoxCaptcha_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnRefreshCaptcha_Click(object sender, EventArgs e)
+        {
+            LoadCaptcha();
+            txtCaptcha.Clear();
+            txtCaptcha.Focus();
+        }
+
+        
+
     }
 }
 

@@ -2,6 +2,8 @@
 using Microsoft.Data.SqlClient;
 using System.Configuration;
 using corebankigtest.BLL;
+using System.Windows.Forms;
+using System;
 
 
 namespace corebankigtest.Forms
@@ -24,7 +26,7 @@ namespace corebankigtest.Forms
         {
 
         }
-        
+
         private void LoadAccountsFromDB(string search = "")
         {
 
@@ -35,7 +37,7 @@ namespace corebankigtest.Forms
             if (totalPages == 0) totalPages = 1;
 
             var dt = _service.GetAccountsPaged(pageNumber, pageSize, currentSearch);
-            
+
             AccountDataGridView.DataSource = null;
             AccountDataGridView.DataSource = dt;
 
@@ -75,9 +77,9 @@ namespace corebankigtest.Forms
 
         }
 
-       
+
         private void SetupGridOnce()
-        
+
         {
             AccountDataGridView.AutoGenerateColumns = false;
             AccountDataGridView.Columns.Clear();
@@ -92,7 +94,7 @@ namespace corebankigtest.Forms
             {
                 HeaderText = "Create Date",
                 DataPropertyName = "CreateDate",
-                DefaultCellStyle = {Format="yyyy-MM-dd"}
+                DefaultCellStyle = { Format = "yyyy-MM-dd" }
             });
 
             AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
@@ -131,7 +133,7 @@ namespace corebankigtest.Forms
             AccountDataGridView.ReadOnly = true;
             AccountDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
-        
+
 
         private void btnNext_Click(object sender, EventArgs e)
         {
@@ -150,7 +152,7 @@ namespace corebankigtest.Forms
         private void UpdatePageLabel()
         {
             lblPage.Text = $"Page {pageNumber} /{totalPages}";
-            
+
         }
         private void UpdateButtons()
 
@@ -158,7 +160,23 @@ namespace corebankigtest.Forms
             btnPrev.Enabled = pageNumber > 1;
             btnNext.Enabled = pageNumber < totalPages;
         }
+
+        private void btnTransaction_Click(object sender, EventArgs e)
+        {
+        
+            using (var frm = new TransactionForm())
+            {
+                var result = frm.ShowDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    LoadAccountsFromDB("");
+                    UpdatePageLabel(); 
+                }
+            }
+        }
+    }
     }
 
 
-}
+

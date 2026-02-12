@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Configuration;
 using corebankigtest.Entities;
+using Microsoft.Identity.Client;
 
 namespace corebankigtest.DAL
 {
@@ -13,7 +14,25 @@ namespace corebankigtest.DAL
         {
             _cs = ConfigurationManager.ConnectionStrings["dbcs"].ConnectionString;
         }
-
+        public List<AccountComboItem> GetAccountsForCombo()
+        {
+            var list = new List<AccountComboItem>();
+            using var con = new SqlConnection(_cs);
+            using var cmd = new SqlCommand(@"
+Select Id,AccountNumber from Account
+order By AccountNumber;", con);
+            con.Open();
+            using var r = cmd.ExecuteReader();
+            while (r.Read())
+            {
+                list.Add(new AccountComboItem
+                {
+                    AccountId = r.GetInt32(0),
+                    DisplayText = r.GetString(1)
+                });
+            }
+            return list;
+        }
         public DataTable GetAccountsPaged(int pageNumber, int pageSize, string search)
         {
             using (var con = new SqlConnection(_cs))
@@ -87,6 +106,45 @@ namespace corebankigtest.DAL
             return accounts;
         }
 
+        public void UpdateBalance(int Id, decimal amount, string type)
+        {
+            using (var con = new SqlConnection(_cs))
+            using (var cmd = new SqlCommand())
+            {
+                cmd.Connection = con;
 
+                if (type == "Deposit")
+                {
+                    cmd.CommandText = "UPDATE Account SET Balance = Balance + @Amount WHERE Id = @Id";
+                }
+                else
+                {
+                    cmd.CommandText = "UPDATE Account SET Balance = Balance - @Amount WHERE Id = @Id";
+                }
+
+                cmd.Parameters.AddWithValue("@Amount", amount);
+                cmd.Parameters.AddWithValue("@Id", Id);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
+        public decimal GetBalance(int Id)
+        {
+            using (SqlConnection cn = new SqlConnection(_cs))
+            using (SqlCommand cmd = new SqlCommand("SELECT Balance FROM dbo.Account WHERE Id=@id", cn))
+            {
+                cmd.Parameters.AddWithValue("@id", Id);
+                cn.Open();
+
+                object result = cmd.ExecuteScalar();
+                if (result == null || result == DBNull.Value)
+                    throw new Exception("Account not found.");
+
+                return Convert.ToDecimal(result);
+            }
+        }
     }
 }

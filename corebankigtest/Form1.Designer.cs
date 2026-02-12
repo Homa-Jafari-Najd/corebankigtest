@@ -28,7 +28,12 @@
             Loginbutton = new Button();
             RegisterButton = new Button();
             pictureBox1 = new PictureBox();
+            txtCaptcha = new TextBox();
+            btnRefreshCaptcha = new Button();
+            pictureBoxCaptcha = new PictureBox();
+            groupBox1 = new GroupBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxCaptcha).BeginInit();
             SuspendLayout();
             // 
             // UserNameLabel
@@ -46,7 +51,7 @@
             UserNameTextBox.Location = new Point(145, 110);
             UserNameTextBox.Name = "UserNameTextBox";
             UserNameTextBox.Size = new Size(599, 31);
-            UserNameTextBox.TabIndex = 1;
+            UserNameTextBox.TabIndex = 0;
             // 
             // PasswordLabel
             // 
@@ -107,11 +112,59 @@
             pictureBox1.TabIndex = 5;
             pictureBox1.TabStop = false;
             // 
+            // txtCaptcha
+            // 
+            txtCaptcha.CharacterCasing = CharacterCasing.Upper;
+            txtCaptcha.Location = new Point(461, 371);
+            txtCaptcha.Name = "txtCaptcha";
+            txtCaptcha.PlaceholderText = "Enter the code shown above";
+            txtCaptcha.Size = new Size(230, 31);
+            txtCaptcha.TabIndex = 2;
+            txtCaptcha.TextChanged += txtCaptcha_TextChanged;
+            // 
+            // btnRefreshCaptcha
+            // 
+            btnRefreshCaptcha.Cursor = Cursors.Hand;
+            btnRefreshCaptcha.FlatAppearance.BorderSize = 0;
+            btnRefreshCaptcha.Font = new Font("Segoe UI", 20F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnRefreshCaptcha.Image = Properties.Resources.icons8_refresh_24;
+            btnRefreshCaptcha.Location = new Point(406, 297);
+            btnRefreshCaptcha.Name = "btnRefreshCaptcha";
+            btnRefreshCaptcha.Size = new Size(47, 34);
+            btnRefreshCaptcha.TabIndex = 5;
+            btnRefreshCaptcha.TabStop = false;
+            btnRefreshCaptcha.UseVisualStyleBackColor = false;
+            btnRefreshCaptcha.Click += btnRefreshCaptcha_Click;
+            // 
+            // pictureBoxCaptcha
+            // 
+            pictureBoxCaptcha.BorderStyle = BorderStyle.FixedSingle;
+            pictureBoxCaptcha.Location = new Point(473, 259);
+            pictureBoxCaptcha.Name = "pictureBoxCaptcha";
+            pictureBoxCaptcha.Size = new Size(202, 96);
+            pictureBoxCaptcha.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBoxCaptcha.TabIndex = 6;
+            pictureBoxCaptcha.TabStop = false;
+            pictureBoxCaptcha.Click += pictureBoxCaptcha_Click_1;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Location = new Point(757, 403);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(300, 150);
+            groupBox1.TabIndex = 9;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "groupBox1";
+            // 
             // LoginForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(780, 450);
+            Controls.Add(btnRefreshCaptcha);
+            Controls.Add(groupBox1);
+            Controls.Add(txtCaptcha);
+            Controls.Add(pictureBoxCaptcha);
             Controls.Add(pictureBox1);
             Controls.Add(RegisterButton);
             Controls.Add(Loginbutton);
@@ -127,6 +180,7 @@
             Text = "Login Form";
             Load += LoginForm_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxCaptcha).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -141,5 +195,9 @@
         private Button Loginbutton;
         private Button RegisterButton;
         private PictureBox pictureBox1;
+        private TextBox txtCaptcha;
+        private Button btnRefreshCaptcha;
+        private PictureBox pictureBoxCaptcha;
+        private GroupBox groupBox1;
     }
 }

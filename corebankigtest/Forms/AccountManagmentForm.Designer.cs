@@ -32,15 +32,16 @@
             NationalCodeTextBox = new MaskedTextBox();
             SearchButton = new Button();
             AccountDataGridView = new DataGridView();
-            btnPrev = new Button();
-            btnNext = new Button();
-            lblPage = new Label();
             AccountNumber = new DataGridViewTextBoxColumn();
             OpeningDate = new DataGridViewTextBoxColumn();
             FirstName = new DataGridViewTextBoxColumn();
             LastName = new DataGridViewTextBoxColumn();
             NationalCode = new DataGridViewTextBoxColumn();
             AccountType = new DataGridViewTextBoxColumn();
+            btnPrev = new Button();
+            btnNext = new Button();
+            lblPage = new Label();
+            btnTransaction = new Button();
             ((System.ComponentModel.ISupportInitialize)AccountDataGridView).BeginInit();
             SuspendLayout();
             // 
@@ -81,41 +82,12 @@
             AccountDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             AccountDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             AccountDataGridView.Columns.AddRange(new DataGridViewColumn[] { AccountNumber, OpeningDate, FirstName, LastName, NationalCode, AccountType });
-            AccountDataGridView.Location = new Point(106, 125);
+            AccountDataGridView.Location = new Point(106, 88);
             AccountDataGridView.Name = "AccountDataGridView";
             AccountDataGridView.RowHeadersWidth = 62;
-            AccountDataGridView.Size = new Size(985, 429);
+            AccountDataGridView.Size = new Size(985, 440);
             AccountDataGridView.TabIndex = 3;
             AccountDataGridView.CellContentClick += AccountDataGridView_CellContentClick;
-            // 
-            // btnPrev
-            // 
-            btnPrev.Location = new Point(12, 572);
-            btnPrev.Name = "btnPrev";
-            btnPrev.Size = new Size(112, 34);
-            btnPrev.TabIndex = 4;
-            btnPrev.Text = "Previous";
-            btnPrev.UseVisualStyleBackColor = true;
-            btnPrev.Click += btnPrev_Click;
-            // 
-            // btnNext
-            // 
-            btnNext.Location = new Point(1081, 572);
-            btnNext.Name = "btnNext";
-            btnNext.Size = new Size(112, 34);
-            btnNext.TabIndex = 5;
-            btnNext.Text = "Next";
-            btnNext.UseVisualStyleBackColor = true;
-            btnNext.Click += btnNext_Click;
-            // 
-            // lblPage
-            // 
-            lblPage.AutoSize = true;
-            lblPage.Location = new Point(547, 577);
-            lblPage.Name = "lblPage";
-            lblPage.Size = new Size(65, 25);
-            lblPage.TabIndex = 6;
-            lblPage.Text = "Page 1";
             // 
             // AccountNumber
             // 
@@ -156,11 +128,51 @@
             AccountType.MinimumWidth = 8;
             AccountType.Name = "AccountType";
             // 
+            // btnPrev
+            // 
+            btnPrev.Location = new Point(12, 572);
+            btnPrev.Name = "btnPrev";
+            btnPrev.Size = new Size(112, 34);
+            btnPrev.TabIndex = 4;
+            btnPrev.Text = "Previous";
+            btnPrev.UseVisualStyleBackColor = true;
+            btnPrev.Click += btnPrev_Click;
+            // 
+            // btnNext
+            // 
+            btnNext.Location = new Point(1081, 572);
+            btnNext.Name = "btnNext";
+            btnNext.Size = new Size(112, 34);
+            btnNext.TabIndex = 5;
+            btnNext.Text = "Next";
+            btnNext.UseVisualStyleBackColor = true;
+            btnNext.Click += btnNext_Click;
+            // 
+            // lblPage
+            // 
+            lblPage.AutoSize = true;
+            lblPage.Location = new Point(547, 577);
+            lblPage.Name = "lblPage";
+            lblPage.Size = new Size(65, 25);
+            lblPage.TabIndex = 6;
+            lblPage.Text = "Page 1";
+            // 
+            // btnTransaction
+            // 
+            btnTransaction.Location = new Point(907, 572);
+            btnTransaction.Name = "btnTransaction";
+            btnTransaction.Size = new Size(125, 36);
+            btnTransaction.TabIndex = 7;
+            btnTransaction.Text = "Transaction";
+            btnTransaction.UseVisualStyleBackColor = true;
+            btnTransaction.Click += btnTransaction_Click;
+            // 
             // AccountManagmentForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1205, 618);
+            Controls.Add(btnTransaction);
             Controls.Add(lblPage);
             Controls.Add(btnNext);
             Controls.Add(btnPrev);
@@ -191,5 +203,6 @@
         private DataGridViewTextBoxColumn LastName;
         private DataGridViewTextBoxColumn NationalCode;
         private DataGridViewTextBoxColumn AccountType;
+        private Button btnTransaction;
     }
 }

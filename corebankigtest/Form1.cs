@@ -3,18 +3,19 @@ using corebankigtest.Entities;
 using corebankigtest.Forms;
 using Microsoft.Data.SqlClient;
 using corebankingtest.Utilities;
+using corebankigtest.BLL.Utilities;
+using System.Linq.Expressions;
+
 namespace corebankigtest
 {
     public partial class LoginForm : Form
     {
-        //string cs =ConfigurationManager.ConnectionStrings["dbcs"].ConnectionString;
         string cs = "server=.;Database=OrderManagementDB;Trusted_Connection=True;TrustServerCertificate=True;";
         private List<Employee> _employees = new List<Employee>();
         private string currentCaptcha;
         public LoginForm()
         {
             var employee1 = new Employee();
-            // _employees.Add(employee1);
             employee1.Id = 1;
             employee1.FirstName = "Homa";
             employee1.LastName = "Jafari";
@@ -34,44 +35,17 @@ namespace corebankigtest
                 Password = "123456,"
 
             };
-            // _employees.Add(employee2);
             _employees.AddRange(employee1, employee2);
 
             InitializeComponent();
-            LoadCaptcha();
-
+            this.AcceptButton = Loginbutton;
 
         }
-        private void LoadCaptcha()
-        {
-            currentCaptcha = CaptchaGenerator.GenerateCode();
-            pictureBoxCaptcha.Image = CaptchaGenerator.GenerateImage(currentCaptcha);
-        }
 
-
-        //    foreach (var employee in _employees)
-        //    {
-        //        if (employee.UserName == username && employee.Password== password)
-        //        {
-        //            LoginFailed = false;
-        //            break;
-        //        }
-        //    }
-        //    if(LoginFailed)
-        //    {
-        //        MessageBox.Show("Invlid username or password!", "Login Failed");
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show($"Welcome {UserNameTextBox.Text}.","Login successfully");
-
-        //    }
-        //}
 
         private void RegisterButton_Click(object sender, EventArgs e)
         {
             var registerform = new RegisterForm();
-            //registerform.Show();
             var result = registerform.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -81,33 +55,13 @@ namespace corebankigtest
             Show();
         }
 
-        private void PasswordtextBox_TextChanged(object sender, EventArgs e)
-        {
 
-        }
 
-        private void LoginForm_Load(object sender, EventArgs e)
-        {
 
-        }
-
-        private void PasswordLabel_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void Loginbutton_Click(object sender, EventArgs e)
         {
-            //var loginform = new LoginForm();
-            //if (_employees.Any(LoginValidator))
-            //{
-            //    MessageBox.Show($"Welcome {UserNameTextBox.Text}.", "Login successfully");
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Invalid username or password!", "Login failed");
 
-            //}
             string username = UserNameTextBox.Text.Trim();
             string password = PasswordTextBox.Text.Trim();
             if (username == "" || password == "")
@@ -115,22 +69,14 @@ namespace corebankigtest
                 MessageBox.Show("Enter Username and Password");
                 return;
             }
-            using (SqlConnection con = new SqlConnection())
-            {
-                if (string.IsNullOrWhiteSpace(txtCaptcha.Text))
-                {
-                    MessageBox.Show("Please enter captcha");
-                    return;
-                }
 
-                if (txtCaptcha.Text.Trim().ToUpper() != currentCaptcha.ToUpper())
-                {
-                    MessageBox.Show("Captcha is incorrect");
-                    txtCaptcha.Clear();
-                    LoadCaptcha();
-                    return;
-                }
+            if (!captchaControl1.IsValid())
+            {
+                MessageBox.Show("Captcha is incorrect");
+                captchaControl1.LoadCaptcha();
+                return;
             }
+
             using (SqlConnection con = new SqlConnection(cs))
             {
                 con.Open();
@@ -172,25 +118,6 @@ namespace corebankigtest
             }
         }
 
-        //var loginform = new LoginForm();
-        //var result = loginform.ShowDialog();
-        //if (result == DialogResult.OK)
-        //{
-
-
-        //    if (_employees.Any(LoginValidator))
-        //    {
-        //        Hide();
-        //        HomeForm homeForm = new(this);
-        //        homeForm.ShowDialog();
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Invalid username or password!", "Login Failed");
-        //    }
-
-        //}
-
         private bool LoginValidator(Employee employee)
         {
             string username = UserNameTextBox.Text;
@@ -204,30 +131,18 @@ namespace corebankigtest
             PasswordTextBox.Text = string.Empty;
         }
 
-        private void pictureBoxCaptcha_Click(object sender, EventArgs e)
+        private void captchaControl1_Load(object sender, EventArgs e)
         {
 
         }
 
-        private void txtCaptcha_TextChanged(object sender, EventArgs e)
+        private void captchaControl1_Load_1(object sender, EventArgs e)
         {
 
         }
 
-        private void pictureBoxCaptcha_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnRefreshCaptcha_Click(object sender, EventArgs e)
-        {
-            LoadCaptcha();
-            txtCaptcha.Clear();
-            txtCaptcha.Focus();
-        }
-
-        
-
+      
     }
 }
+
 

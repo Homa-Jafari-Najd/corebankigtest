@@ -10,6 +10,7 @@ namespace corebankigtest.BLL
 {
     public class AccountService
     {
+        private readonly TransactionService _transactionService = new TransactionService();
         private readonly AccountRepository _repo;
         public AccountService()
         {
@@ -43,7 +44,8 @@ namespace corebankigtest.BLL
             if (type == "Withdraw" && amount > currentBalance)
                 throw new Exception("Insufficient balance. You cannot withdraw more than the current balance.");
 
-            _repo.UpdateBalance(accountId, amount, type);
+            _transactionService.InsertTransaction(accountId, amount, type);
+            _repo.UpdateBalance(accountId,amount,type);
         }
     }
 }

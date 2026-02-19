@@ -4,7 +4,7 @@ using System.Text;
 using System.Drawing;
 using corebankingtest.Utilities;
 
-namespace corebankigtest.BLL.Utilities
+namespace corebankigtest.BLL
 {
    
         internal static class CaptchaService

@@ -3,7 +3,6 @@ using corebankigtest.Entities;
 using corebankigtest.Forms;
 using Microsoft.Data.SqlClient;
 using corebankingtest.Utilities;
-using corebankigtest.BLL.Utilities;
 using System.Linq.Expressions;
 
 namespace corebankigtest

@@ -1,4 +1,5 @@
-﻿using corebankigtest.BLL.Utilities;
+﻿using corebankigtest.BLL;
+
 namespace corebankigtest.Forms
 {
     public partial class CaptchaControl : UserControl

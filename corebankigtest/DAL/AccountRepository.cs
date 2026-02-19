@@ -1,8 +1,7 @@
 ﻿using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Configuration;
 using corebankigtest.Entities;
-using Microsoft.Identity.Client;
 
 namespace corebankigtest.DAL
 {
@@ -19,8 +18,8 @@ namespace corebankigtest.DAL
             var list = new List<AccountComboItem>();
             using var con = new SqlConnection(_cs);
             using var cmd = new SqlCommand(@"
-Select Id,AccountNumber from Account
-order By AccountNumber;", con);
+                   Select Id,AccountNumber from Account
+                   order By AccountNumber;", con);
             con.Open();
             using var r = cmd.ExecuteReader();
             while (r.Read())

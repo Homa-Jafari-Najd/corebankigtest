@@ -12,7 +12,13 @@ namespace corebankigtest.Forms
 
     public partial class TransactionForm : Form
     {
+        private readonly int _accountId;
         private readonly AccountService _accountService = new AccountService();
+        public TransactionForm(int accountId)
+        {
+            InitializeComponent();
+            _accountId = accountId;
+        }
         public TransactionForm()
         {
             InitializeComponent();
@@ -51,7 +57,7 @@ namespace corebankigtest.Forms
         {
             try
             {
-                int accountId = Convert.ToInt32(cmbAccount.SelectedValue); // یا هر چیزی که داری
+                int accountId = _accountId;
                 decimal amount = decimal.Parse(txtAmount.Text.Trim());
 
                 string type = cmbTransactionType.Text; 

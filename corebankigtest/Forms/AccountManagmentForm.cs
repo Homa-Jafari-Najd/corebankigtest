@@ -4,7 +4,7 @@ using System.Configuration;
 using corebankigtest.BLL;
 using System.Windows.Forms;
 using System;
-
+using corebankigtest.Forms;
 
 namespace corebankigtest.Forms
 {
@@ -161,22 +161,36 @@ namespace corebankigtest.Forms
             btnNext.Enabled = pageNumber < totalPages;
         }
 
+
+
         private void btnTransaction_Click(object sender, EventArgs e)
         {
-        
-            using (var frm = new TransactionForm())
+            if (AccountDataGridView.CurrentRow == null)
+            {
+                MessageBox.Show("Please select an account first.");
+                return;
+            }
+
+            var rowView = AccountDataGridView.CurrentRow.DataBoundItem as System.Data.DataRowView;
+            if (rowView == null)
+            {
+                MessageBox.Show("Row binding is not DataRowView.");
+                return;
+            }
+
+            int accountId = Convert.ToInt32(rowView["Id"]);
+
+            using (var frm = new TransactionManagementForm(accountId))
             {
                 var result = frm.ShowDialog();
-
                 if (result == DialogResult.OK)
                 {
-                    LoadAccountsFromDB("");
-                    UpdatePageLabel(); 
+                    LoadAccountsFromDB();
+                    UpdatePageLabel();
                 }
             }
         }
     }
-    }
-
+}
 
 

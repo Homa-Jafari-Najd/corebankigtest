@@ -75,7 +75,6 @@
             txtAmount.Name = "txtAmount";
             txtAmount.Size = new Size(250, 31);
             txtAmount.TabIndex = 2;
-            txtAmount.TextAlign = HorizontalAlignment.Right;
             // 
             // label1
             // 

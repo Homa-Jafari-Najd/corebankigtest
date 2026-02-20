@@ -1,25 +1,25 @@
 ﻿using System.Data;
 using Microsoft.Data.SqlClient;
-using System.Configuration;
 using corebankigtest.Entities;
+using corebankigtest.DAL.Abstractions;
+
 
 namespace corebankigtest.DAL
 {
     public class AccountRepository
     {
-        private readonly string _cs;
-
-        public AccountRepository()
+        private readonly IDConnectionFactory _connectionFactory;
+        public AccountRepository(IDConnectionFactory connectionFactory)
         {
-            _cs = ConfigurationManager.ConnectionStrings["dbcs"].ConnectionString;
+            _connectionFactory = connectionFactory;
         }
         public List<AccountComboItem> GetAccountsForCombo()
         {
             var list = new List<AccountComboItem>();
-            using var con = new SqlConnection(_cs);
+            using var con = (SqlConnection)_connectionFactory.CreateConnection();
             using var cmd = new SqlCommand(@"
                    Select Id,AccountNumber from Account
-                   order By AccountNumber;", con);
+                   order By AccountNumber;", (SqlConnection)con);
             con.Open();
             using var r = cmd.ExecuteReader();
             while (r.Read())
@@ -34,9 +34,9 @@ namespace corebankigtest.DAL
         }
         public DataTable GetAccountsPaged(int pageNumber, int pageSize, string search)
         {
-            using (var con = new SqlConnection(_cs))
+            using var con = _connectionFactory.CreateConnection();
             {
-                using (var cmd = new SqlCommand("sp_GETAccountsPaged", con))
+                using (var cmd = new SqlCommand("sp_GETAccountsPaged", (SqlConnection)con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
@@ -56,7 +56,7 @@ namespace corebankigtest.DAL
 
         public int GetTotalAccounts(string search)
         {
-            using (var con = new SqlConnection(_cs))
+            using var con =_connectionFactory.CreateConnection();
             {
                 con.Open();
                 using (var cmd = new SqlCommand(@"
@@ -68,7 +68,7 @@ namespace corebankigtest.DAL
                         OR a.AccountNumber LIKE '%' + @search + '%'
                         OR REPLACE(c.NationalCode,'-','') LIKE '%' + REPLACE(@search,'-','') + '%'
                         OR (c.FirstName + ' ' + c.LastName) LIKE '%' + @search + '%')
-        ", con))
+        ", (SqlConnection)con))
                 {
                     cmd.Parameters.AddWithValue("@search", search);
                     return (int)cmd.ExecuteScalar();
@@ -79,8 +79,8 @@ namespace corebankigtest.DAL
         {
             var accounts = new List<Account>();
 
-            using (SqlConnection con = new SqlConnection(_cs))
-            using (SqlCommand cmd = new SqlCommand("sp_GetAccounts", con))
+            using var  con = _connectionFactory.CreateConnection();
+            using var cmd = new SqlCommand("sp_GetAccounts", (SqlConnection)con);
             {
                 cmd.CommandType = CommandType.StoredProcedure;
 
@@ -107,10 +107,10 @@ namespace corebankigtest.DAL
 
         public void UpdateBalance(int Id, decimal amount, string type)
         {
-            using (var con = new SqlConnection(_cs))
+            using var con = _connectionFactory.CreateConnection();
             using (var cmd = new SqlCommand())
             {
-                cmd.Connection = con;
+                cmd.Connection = (SqlConnection)con;
 
                 if (type == "Deposit")
                 {
@@ -132,7 +132,7 @@ namespace corebankigtest.DAL
 
         public decimal GetBalance(int Id)
         {
-            using (SqlConnection cn = new SqlConnection(_cs))
+            using SqlConnection cn =(SqlConnection) _connectionFactory.CreateConnection();
             using (SqlCommand cmd = new SqlCommand("SELECT Balance FROM dbo.Account WHERE Id=@id", cn))
             {
                 cmd.Parameters.AddWithValue("@id", Id);
@@ -144,6 +144,32 @@ namespace corebankigtest.DAL
 
                 return Convert.ToDecimal(result);
             }
+        }
+        public User? GetUserByUsernamePassword(string username, string password)
+        {
+            using var con = _connectionFactory.CreateConnection();
+            con.Open();
+
+            using var cmd = new SqlCommand(@"
+        SELECT TOP 1 Id, Username, Role, ISActive
+        FROM dbo.Users
+        WHERE Username = @username AND Password = @password AND ISActive = 1
+    ", (SqlConnection)con);
+
+            cmd.Parameters.AddWithValue("@username", username);
+            cmd.Parameters.AddWithValue("@password", password);
+
+            using var r = cmd.ExecuteReader();
+            if (!r.Read())
+                return null;
+
+            return new User
+            {
+                Id = Convert.ToInt32(r["Id"]),
+                Username = r["Username"].ToString() ?? "",
+                Role = r["Role"].ToString() ?? "",
+                IsActive = Convert.ToBoolean(r["ISActive"])
+            };
         }
     }
 }

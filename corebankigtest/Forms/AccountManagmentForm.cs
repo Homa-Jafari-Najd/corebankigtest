@@ -2,25 +2,28 @@
 using Microsoft.Data.SqlClient;
 using System.Configuration;
 using corebankigtest.BLL;
-using System.Windows.Forms;
-using System;
-using corebankigtest.Forms;
-
+using corebankigtest.DAL.Abstractions;
+using corebankigtest.DAL.Factories;
 namespace corebankigtest.Forms
+ 
 {
     public partial class AccountManagmentForm : Form
     {
-        private readonly AccountService _service = new AccountService();
-        //private List<Account> _accounts;
+        private readonly AccountService _service;
+
         private int pageNumber = 1;
         private int pageSize = 5;
         private int totalPages = 1;
         private int totalRecords = 0;
         string currentSearch = "";
-        public AccountManagmentForm()
+        public AccountManagmentForm(AccountService service)
         {
             InitializeComponent();
-
+            string connectionString = ConfigurationManager
+                .ConnectionStrings["dbcs"]
+                .ConnectionString;
+            IDConnectionFactory factory = new SqlConnectionFactory(connectionString);
+            _service = new AccountService(factory);
         }
         private void AccountDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {

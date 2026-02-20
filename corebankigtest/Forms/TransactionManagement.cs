@@ -17,7 +17,7 @@ namespace corebankigtest.Forms
             var list = service.GetTransactions(_accountId);
             dgvTransactions.DataSource = list;
         }
-
+        
         private void btnShowTransaction_Click(object sender, EventArgs e)
         {
             LoadTransactions();

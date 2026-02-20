@@ -114,7 +114,6 @@
             captchaControl1.Name = "captchaControl1";
             captchaControl1.Size = new Size(336, 117);
             captchaControl1.TabIndex = 3;
-            captchaControl1.Load += captchaControl1_Load;
             // 
             // LoginForm
             // 

@@ -1,34 +1,34 @@
 ﻿
+using corebankigtest.BLL;
+
 namespace corebankigtest.Forms
 {
+    
     public partial class HomeForm : Form
     {
         private string _user;
         private string _role;
-        private LoginForm _loginForm;
+        private readonly AccountService _service;
 
-        public HomeForm(LoginForm loginForm)
+        public HomeForm(string user, string role, AccountService service)
         {
-            _loginForm = loginForm;
-
             InitializeComponent();
-        }
-        public HomeForm(string user, string role)
-        {
-            _user = user;
+             _user= user;
             _role = role;
+            _service = service;
+
         }
+
 
         private void Logoutbutton_Click(object sender, EventArgs e)
         {
-            Close();
-            _loginForm.ResetTextBox();
-            _loginForm.Show();
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
         }
 
         private void AccountManagmentbutton_Click(object sender, EventArgs e)
         {
-            var form = new AccountManagmentForm();
+            var form = new AccountManagmentForm(_service);
             form.Show();
         }
 

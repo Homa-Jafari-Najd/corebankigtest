@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
-using System.Windows.Forms;
 using corebankigtest.BLL;
+using corebankigtest.DAL.Factories;
+using corebankigtest.DAL.Abstractions;
+using System.Configuration;
 
 namespace corebankigtest.Forms
 {
@@ -13,15 +13,21 @@ namespace corebankigtest.Forms
     public partial class TransactionForm : Form
     {
         private readonly int _accountId;
-        private readonly AccountService _accountService = new AccountService();
+        private readonly AccountService _accountService;
+        
         public TransactionForm(int accountId)
         {
             InitializeComponent();
             _accountId = accountId;
-        }
-        public TransactionForm()
-        {
-            InitializeComponent();
+
+            string cs = ConfigurationManager.ConnectionStrings["dbcs"].ConnectionString;
+            IDConnectionFactory factory = new SqlConnectionFactory(cs);
+            _accountService=new AccountService(factory);
+
+
+
+
+
             cmbTransactionType.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbTransactionType.Items.Clear();
             cmbTransactionType.Items.Add("Deposit");

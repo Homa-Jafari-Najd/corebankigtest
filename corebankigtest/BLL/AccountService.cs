@@ -9,11 +9,13 @@ namespace corebankigtest.BLL
 {
     public class AccountService
     {
-        private readonly AccountRepository _accountRepository;
-        public AccountService(IDConnectionFactory Factory)
+        private readonly IAccountRepository _accountRepository;
+        public AccountService(IAccountRepository accountrepository)
         {
-            _accountRepository = new AccountRepository(Factory);
+            _accountRepository = accountrepository;
         }
+        
+                  
         public List<AccountComboItem> GetAccountsForCombo()
             => _accountRepository.GetAccountsForCombo();
 

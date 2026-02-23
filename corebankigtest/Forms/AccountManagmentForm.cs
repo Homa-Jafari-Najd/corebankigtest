@@ -10,20 +10,19 @@ namespace corebankigtest.Forms
     public partial class AccountManagmentForm : Form
     {
         private readonly AccountService _service;
+        private readonly TransactionService _transactionService;
 
         private int pageNumber = 1;
         private int pageSize = 5;
         private int totalPages = 1;
         private int totalRecords = 0;
         string currentSearch = "";
-        public AccountManagmentForm(AccountService service)
+        public AccountManagmentForm(AccountService service,TransactionService transactionService)
         {
             InitializeComponent();
-            string connectionString = ConfigurationManager
-                .ConnectionStrings["dbcs"]
-                .ConnectionString;
-            IDConnectionFactory factory = new SqlConnectionFactory(connectionString);
-            _service = new AccountService(factory);
+      
+            _service = service;
+            _transactionService = transactionService;
         }
         private void AccountDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -43,6 +42,8 @@ namespace corebankigtest.Forms
 
             AccountDataGridView.DataSource = null;
             AccountDataGridView.DataSource = dt;
+            if(AccountDataGridView.Columns.Contains("AccountId"))
+                AccountDataGridView.Columns["AccountId"].Visible=false;
 
             UpdatePageLabel();
             UpdateButtons();
@@ -181,9 +182,9 @@ namespace corebankigtest.Forms
                 return;
             }
 
-            int accountId = Convert.ToInt32(rowView["Id"]);
+            int accountId = Convert.ToInt32(rowView["AccountId"]);
 
-            using (var frm = new TransactionManagementForm(accountId))
+            using (var frm = new TransactionManagementForm(accountId,_service,_transactionService))
             {
                 var result = frm.ShowDialog();
                 if (result == DialogResult.OK)

@@ -6,7 +6,7 @@ using corebankigtest.DAL.Abstractions;
 
 namespace corebankigtest.DAL
 {
-    public class AccountRepository
+    public class AccountRepository : IAccountRepository
     {
         private readonly IDConnectionFactory _connectionFactory;
         public AccountRepository(IDConnectionFactory connectionFactory)
@@ -35,28 +35,28 @@ namespace corebankigtest.DAL
         public DataTable GetAccountsPaged(int pageNumber, int pageSize, string search)
         {
             using var con = _connectionFactory.CreateConnection();
+
+            using (var cmd = new SqlCommand("sp_GETAccountsPaged", (SqlConnection)con))
             {
-                using (var cmd = new SqlCommand("sp_GETAccountsPaged", (SqlConnection)con))
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@PageNumber", pageNumber);
+                cmd.Parameters.AddWithValue("@PageSize", pageSize);
+                cmd.Parameters.AddWithValue("@Search", search);
+
+                var dt = new DataTable();
+                using (var da = new SqlDataAdapter(cmd))
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@PageNumber", pageNumber);
-                    cmd.Parameters.AddWithValue("@PageSize", pageSize);
-                    cmd.Parameters.AddWithValue("@Search", search);
-
-                    var dt = new DataTable();
-                    using (var da = new SqlDataAdapter(cmd))
-                    {
-                        da.Fill(dt);
-                        return dt;
-                    }
+                    da.Fill(dt);
+                    return dt;
                 }
             }
         }
 
+
         public int GetTotalAccounts(string search)
         {
-            using var con =_connectionFactory.CreateConnection();
+            using var con = _connectionFactory.CreateConnection();
             {
                 con.Open();
                 using (var cmd = new SqlCommand(@"
@@ -79,7 +79,7 @@ namespace corebankigtest.DAL
         {
             var accounts = new List<Account>();
 
-            using var  con = _connectionFactory.CreateConnection();
+            using var con = _connectionFactory.CreateConnection();
             using var cmd = new SqlCommand("sp_GetAccounts", (SqlConnection)con);
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -132,7 +132,7 @@ namespace corebankigtest.DAL
 
         public decimal GetBalance(int Id)
         {
-            using SqlConnection cn =(SqlConnection) _connectionFactory.CreateConnection();
+            using SqlConnection cn = (SqlConnection)_connectionFactory.CreateConnection();
             using (SqlCommand cmd = new SqlCommand("SELECT Balance FROM dbo.Account WHERE Id=@id", cn))
             {
                 cmd.Parameters.AddWithValue("@id", Id);

@@ -9,6 +9,7 @@ namespace corebankigtest.Forms
         private string _user;
         private string _role;
         private readonly AccountService _service;
+            private readonly TransactionService _transactionService;
 
         public HomeForm(string user, string role, AccountService service)
         {
@@ -28,7 +29,7 @@ namespace corebankigtest.Forms
 
         private void AccountManagmentbutton_Click(object sender, EventArgs e)
         {
-            var form = new AccountManagmentForm(_service);
+            var form = new AccountManagmentForm(_service,_transactionService);
             form.Show();
         }
 

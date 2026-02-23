@@ -13,20 +13,17 @@ namespace corebankigtest.Forms
     public partial class TransactionForm : Form
     {
         private readonly int _accountId;
+        private readonly TransactionService _transactionService;
         private readonly AccountService _accountService;
-        
-        public TransactionForm(int accountId)
+            
+
+
+        public TransactionForm(int accountId, TransactionService transactionService,AccountService accountService) 
         {
             InitializeComponent();
             _accountId = accountId;
-
-            string cs = ConfigurationManager.ConnectionStrings["dbcs"].ConnectionString;
-            IDConnectionFactory factory = new SqlConnectionFactory(cs);
-            _accountService=new AccountService(factory);
-
-
-
-
+            _transactionService = transactionService;
+            _accountService = accountService;
 
             cmbTransactionType.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbTransactionType.Items.Clear();
@@ -52,7 +49,7 @@ namespace corebankigtest.Forms
             if (accounts.Count > 0)
                 cmbAccount.SelectedIndex = 0;
         }
-        
+
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -66,9 +63,9 @@ namespace corebankigtest.Forms
                 int accountId = _accountId;
                 decimal amount = decimal.Parse(txtAmount.Text.Trim());
 
-                string type = cmbTransactionType.Text; 
+                string type = cmbTransactionType.Text;
 
-                _accountService.MakeTransaction(accountId, amount, type);
+                _transactionService.InsertTransaction(accountId, amount, type);
 
                 MessageBox.Show("Transaction successful ✅");
                 this.DialogResult = DialogResult.OK;

@@ -6,26 +6,32 @@ namespace corebankigtest.Forms
     public partial class TransactionManagementForm : Form
     {
         private readonly int _accountId;
-        private readonly TransactionService service = new TransactionService();
-        public TransactionManagementForm(int accountId)
+        private readonly AccountService _accountService;
+
+        private readonly TransactionService _transactionService;
+        public TransactionManagementForm(int accountId, AccountService accountService,TransactionService transactionService)
         {
             InitializeComponent();
             _accountId = accountId;
+            _accountService = accountService;
+            _transactionService = transactionService;
+                
         }
         private void LoadTransactions()
         {
-            var list = service.GetTransactions(_accountId);
+            var list = _transactionService.GetTransactions(_accountId);
             dgvTransactions.DataSource = list;
         }
-        
+
         private void btnShowTransaction_Click(object sender, EventArgs e)
         {
             LoadTransactions();
+                
         }
 
         private void btnInsert_Click(object sender, EventArgs e)
         {
-            using (var frm = new TransactionForm(_accountId))
+            using (var frm = new TransactionForm(_accountId,_transactionService,_accountService))
             {
                 var result = frm.ShowDialog();
                 if (result == DialogResult.OK)
@@ -54,10 +60,10 @@ namespace corebankigtest.Forms
 
             try
             {
-                service.DeleteTransaction(transactionId);
+                _transactionService.DeleteTransaction(transactionId);
 
-                LoadTransactions();              
-                this.DialogResult = DialogResult.OK; 
+                LoadTransactions();
+                this.DialogResult = DialogResult.OK;
             }
             catch (Exception ex)
             {

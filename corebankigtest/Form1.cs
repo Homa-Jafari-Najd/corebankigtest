@@ -1,9 +1,5 @@
-using System.Data;
 using corebankigtest.Entities;
 using corebankigtest.Forms;
-using Microsoft.Data.SqlClient;
-using corebankingtest.Utilities;
-using System.Linq.Expressions;
 using corebankigtest.BLL;
 
 namespace corebankigtest
@@ -11,12 +7,15 @@ namespace corebankigtest
     public partial class LoginForm : Form
     {
         private readonly AccountService _service;
+        private readonly TransactionService _transactionService;
         private string currentCaptcha;
-        public LoginForm(AccountService service)
+        public LoginForm(AccountService service,TransactionService transactionService)
         {
             InitializeComponent();
             _service = service;
+            _transactionService = transactionService;
             this.AcceptButton = Loginbutton;
+            
 
         }
         private void captchaControl1_Load(object sender, EventArgs e)
@@ -28,7 +27,6 @@ namespace corebankigtest
             var registerform = new RegisterForm();
             var result = registerform.ShowDialog();
 
-            Show();
         }
         private void Loginbutton_Click(object sender, EventArgs e)
         {
@@ -45,6 +43,7 @@ namespace corebankigtest
             {
                 MessageBox.Show("Captcha is incorrect");
                 captchaControl1.LoadCaptcha();
+                ResetPassword();
                 return;
             }
 
@@ -54,27 +53,26 @@ namespace corebankigtest
             {
                 MessageBox.Show("Invalid username or password");
                 captchaControl1.LoadCaptcha();
+                ResetPassword();
                 return;
             }
 
             MessageBox.Show("Login Successful!");
             this.Hide();
-            var frm = new AccountManagmentForm(_service);
+            var frm = new AccountManagmentForm(_service,_transactionService);
             frm.ShowDialog();
             this.Close();
         }
 
-        private bool LoginValidator(Employee employee)
-        {
-            string username = UserNameTextBox.Text;
-            string password = PasswordTextBox.Text;
-
-            return employee.UserName == username && employee.Password == password;
-        }
         public void ResetTextBox()
         {
             UserNameTextBox.Text = string.Empty;
             PasswordTextBox.Text = string.Empty;
+        }
+        public void ResetPassword()
+        {
+            PasswordTextBox.Text= string.Empty;
+            PasswordTextBox.Focus();
         }
 
     }

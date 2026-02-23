@@ -1,9 +1,9 @@
 using corebankigtest;
+using corebankigtest.DAL;
 using corebankigtest.BLL;
 using corebankigtest.DAL.Abstractions;
 using corebankigtest.DAL.Factories;
 using System.Configuration;
-using System.Linq.Expressions;
 internal static class Program
 {
     [STAThread]
@@ -23,9 +23,11 @@ internal static class Program
             else
                 factory = new SqliteConnectionFactory(cs);
 
-            var accountService = new AccountService(factory);
+            var  repository = new AccountRepository(factory);
+            var accountService=new AccountService(repository);
+            var transactionService = new TransactionService();
 
-            Application.Run(new LoginForm(accountService));
+            Application.Run(new LoginForm(accountService,transactionService));
         }
         catch (Exception ex)
         {

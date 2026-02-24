@@ -23,11 +23,12 @@ internal static class Program
             else
                 factory = new SqliteConnectionFactory(cs);
 
-            var  repository = new AccountRepository(factory);
-            var accountService=new AccountService(repository);
-            var transactionService = new TransactionService();
+            var accountrepository = new AccountRepository(factory);
+            var accountService = new AccountService(accountrepository);
+            var transactionRepository = new TransactionRepository(factory);
+            var transactionService = new TransactionService(transactionRepository);
 
-            Application.Run(new LoginForm(accountService,transactionService));
+            Application.Run(new LoginForm(accountService, transactionService));
         }
         catch (Exception ex)
         {
@@ -35,5 +36,5 @@ internal static class Program
         }
     }
 }
-        
-    
+
+

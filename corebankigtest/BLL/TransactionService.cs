@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
-using corebankigtest.DAL;
-using corebankigtest.Entities;
+﻿using corebankigtest.Entities;
+using corebankigtest.DAL.Abstractions;
 
 namespace corebankigtest.BLL
 {
     public class TransactionService
     {
-        private readonly TransactionRepository _repo = new TransactionRepository();
+        private readonly ITransactionRepository _repo;
+        public TransactionService(ITransactionRepository repo)
+        {
+            _repo = repo;
+        }
 
         public List<Transaction> GetTransactions(int accountId)
         

@@ -1,36 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
+﻿using System.Data;
+using corebankigtest.DAL.Abstractions;
 using corebankigtest.Entities;
 using Microsoft.Data.SqlClient;
 
 namespace corebankigtest.DAL
 {
-    public class TransactionRepository
+    public class TransactionRepository : ITransactionRepository
     {
-        private readonly string _cs;
 
-        public TransactionRepository()
+        private readonly IDConnectionFactory _factory;
+        public TransactionRepository(IDConnectionFactory factory)
         {
-            _cs = ConfigurationManager.ConnectionStrings["dbcs"].ConnectionString;
+            _factory = factory;
         }
 
         public List<Transaction> GetByAccountId(int accountId)
         {
             var list = new List<Transaction>();
 
-            using var con = new SqlConnection(_cs);
-            using var cmd = new SqlCommand(@"
+            using var con = _factory.CreateConnection();
+            using var cmd = con.CreateCommand();
+            cmd.CommandText = @"
                 SELECT TransactionId, AccountId, Amount, Type, TransactionDate
                 FROM Transactions
                 WHERE AccountId = @AccountId
                 ORDER BY TransactionDate DESC, TransactionId DESC
-            ", con);
+            ";
 
-            cmd.Parameters.AddWithValue("@AccountId", accountId);
-
+            var p = cmd.CreateParameter();
+            p.ParameterName = "@AccountId";
+            p.Value = accountId;
+            cmd.Parameters.Add(p);
             con.Open();
+
             using var r = cmd.ExecuteReader();
             while (r.Read())
             {
@@ -48,26 +50,46 @@ namespace corebankigtest.DAL
         }
         public void DeleteTransactionAndRevertBalance(int transactionId)
         {
-            using (var conn = new SqlConnection(_cs))
-            using (var cmd = new SqlCommand("dbo.sp_DeleteTransactionAndRevertBalance", conn))
-            {
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@TransactionId", transactionId);
+            using var con = _factory.CreateConnection();
+            con.Open();
 
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
+            using var cmd = con.CreateCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "dbo.sp_DeleteTransactionAndRevertBalance";
+
+            var p = cmd.CreateParameter();
+            p.ParameterName = "@TransactionId";
+            p.Value = transactionId;
+            cmd.Parameters.Add(p);
+
+            cmd.ExecuteNonQuery();
         }
         public void Insert(int accountId, decimal amount, string type)
         {
-            using var con = new SqlConnection(_cs);
-            using var cmd = new SqlCommand(@"
-             INSERT INTO Transactions (AccountId,Amount,Type,TransactionDate)
-             VALUES(@AccountId,@Amount,@Type,GETDATE());", con);
-            cmd.Parameters.AddWithValue("@AccountId", accountId);
-            cmd.Parameters.AddWithValue("@Amount", amount);
-            cmd.Parameters.AddWithValue("@Type", type);
+            using var con = _factory.CreateConnection();
             con.Open();
+
+            using var cmd = con.CreateCommand();
+            cmd.CommandText = @"
+        INSERT INTO Transactions (AccountId, Amount, Type, TransactionDate)
+        VALUES (@AccountId, @Amount, @Type, GETDATE());
+    ";
+
+            var p1 = cmd.CreateParameter();
+            p1.ParameterName = "@AccountId";
+            p1.Value = accountId;
+            cmd.Parameters.Add(p1);
+
+            var p2 = cmd.CreateParameter();
+            p2.ParameterName = "@Amount";
+            p2.Value = amount;
+            cmd.Parameters.Add(p2);
+
+            var p3 = cmd.CreateParameter();
+            p3.ParameterName = "@Type";
+            p3.Value = type;
+            cmd.Parameters.Add(p3);
+
             cmd.ExecuteNonQuery();
         }
     }

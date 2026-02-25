@@ -1,21 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
-using System.Windows.Forms;
 using corebankigtest.BLL;
+using corebankigtest.DAL.Factories;
+using corebankigtest.DAL.Abstractions;
+using System.Configuration;
 
 namespace corebankigtest.Forms
 {
 
     public partial class TransactionForm : Form
     {
-        private readonly AccountService _accountService = new AccountService();
-        public TransactionForm()
+        private readonly int _accountId;
+        private readonly TransactionService _transactionService;
+        private readonly AccountService _accountService;
+            
+
+
+        public TransactionForm(int accountId, TransactionService transactionService,AccountService accountService) 
         {
             InitializeComponent();
+            _accountId = accountId;
+            _transactionService = transactionService;
+            _accountService = accountService;
+
             cmbTransactionType.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbTransactionType.Items.Clear();
             cmbTransactionType.Items.Add("Deposit");
@@ -40,7 +49,7 @@ namespace corebankigtest.Forms
             if (accounts.Count > 0)
                 cmbAccount.SelectedIndex = 0;
         }
-        
+
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -51,12 +60,12 @@ namespace corebankigtest.Forms
         {
             try
             {
-                int accountId = Convert.ToInt32(cmbAccount.SelectedValue); // یا هر چیزی که داری
+                int accountId = _accountId;
                 decimal amount = decimal.Parse(txtAmount.Text.Trim());
 
-                string type = cmbTransactionType.Text; 
+                string type = cmbTransactionType.Text;
 
-                _accountService.MakeTransaction(accountId, amount, type);
+                _transactionService.InsertTransaction(accountId, amount, type);
 
                 MessageBox.Show("Transaction successful ✅");
                 this.DialogResult = DialogResult.OK;

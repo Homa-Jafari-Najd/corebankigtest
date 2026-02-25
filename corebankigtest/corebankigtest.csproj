@@ -10,7 +10,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.3" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.3" />
     <PackageReference Include="ReCaptcha.Desktop.WinForms" Version="2.1.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
   </ItemGroup>
 
@@ -30,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="BLL\Utilities\" />
     <Folder Include="Screenshots\" />
   </ItemGroup>
 

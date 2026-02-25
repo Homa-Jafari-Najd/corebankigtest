@@ -2,25 +2,27 @@
 using Microsoft.Data.SqlClient;
 using System.Configuration;
 using corebankigtest.BLL;
-using System.Windows.Forms;
-using System;
-
-
+using corebankigtest.DAL.Abstractions;
+using corebankigtest.DAL.Factories;
 namespace corebankigtest.Forms
+ 
 {
     public partial class AccountManagmentForm : Form
     {
-        private readonly AccountService _service = new AccountService();
-        //private List<Account> _accounts;
+        private readonly AccountService _service;
+        private readonly TransactionService _transactionService;
+
         private int pageNumber = 1;
         private int pageSize = 5;
         private int totalPages = 1;
         private int totalRecords = 0;
         string currentSearch = "";
-        public AccountManagmentForm()
+        public AccountManagmentForm(AccountService service,TransactionService transactionService)
         {
             InitializeComponent();
-
+      
+            _service = service;
+            _transactionService = transactionService;
         }
         private void AccountDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -40,6 +42,8 @@ namespace corebankigtest.Forms
 
             AccountDataGridView.DataSource = null;
             AccountDataGridView.DataSource = dt;
+            if(AccountDataGridView.Columns.Contains("AccountId"))
+                AccountDataGridView.Columns["AccountId"].Visible=false;
 
             UpdatePageLabel();
             UpdateButtons();
@@ -161,22 +165,36 @@ namespace corebankigtest.Forms
             btnNext.Enabled = pageNumber < totalPages;
         }
 
+
+
         private void btnTransaction_Click(object sender, EventArgs e)
         {
-        
-            using (var frm = new TransactionForm())
+            if (AccountDataGridView.CurrentRow == null)
+            {
+                MessageBox.Show("Please select an account first.");
+                return;
+            }
+
+            var rowView = AccountDataGridView.CurrentRow.DataBoundItem as System.Data.DataRowView;
+            if (rowView == null)
+            {
+                MessageBox.Show("Row binding is not DataRowView.");
+                return;
+            }
+
+            int accountId = Convert.ToInt32(rowView["AccountId"]);
+
+            using (var frm = new TransactionManagementForm(accountId,_service,_transactionService))
             {
                 var result = frm.ShowDialog();
-
                 if (result == DialogResult.OK)
                 {
-                    LoadAccountsFromDB("");
-                    UpdatePageLabel(); 
+                    LoadAccountsFromDB();
+                    UpdatePageLabel();
                 }
             }
         }
     }
-    }
-
+}
 
 

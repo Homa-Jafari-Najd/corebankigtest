@@ -1,15 +1,15 @@
 ﻿using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Configuration;
-using corebankigtest.BLL;
-using corebankigtest.DAL.Abstractions;
-using corebankigtest.DAL.Factories;
+using CoreBanking.BusinessLogic;
+using corebankigtest.UI;
+
 namespace corebankigtest.Forms
- 
+
 {
     public partial class AccountManagmentForm : Form
     {
-        private readonly AccountService _service;
+        private readonly AccountService _accountService;
         private readonly TransactionService _transactionService;
 
         private int pageNumber = 1;
@@ -17,11 +17,11 @@ namespace corebankigtest.Forms
         private int totalPages = 1;
         private int totalRecords = 0;
         string currentSearch = "";
-        public AccountManagmentForm(AccountService service,TransactionService transactionService)
+        public AccountManagmentForm(AccountService accountService, TransactionService transactionService)
         {
             InitializeComponent();
-      
-            _service = service;
+
+            _accountService = accountService;
             _transactionService = transactionService;
         }
         private void AccountDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -34,19 +34,25 @@ namespace corebankigtest.Forms
 
             currentSearch = (search ?? "").Trim();
 
-            totalRecords = _service.GetTotalAccounts(currentSearch);
+            totalRecords = _accountService.GetTotalAccounts(currentSearch);
             totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
             if (totalPages == 0) totalPages = 1;
 
-            var dt = _service.GetAccountsPaged(pageNumber, pageSize, currentSearch);
+            var dt = _accountService.GetAccountsPaged(pageNumber, pageSize, currentSearch);
 
             AccountDataGridView.DataSource = null;
             AccountDataGridView.DataSource = dt;
-            if(AccountDataGridView.Columns.Contains("AccountId"))
-                AccountDataGridView.Columns["AccountId"].Visible=false;
+            if (AccountDataGridView.Columns.Contains("AccountId"))
+            {
+                var col = AccountDataGridView.Columns["AccountId"];
+                if (col != null)
+                {
+                    col.Visible = false;
+                }
 
-            UpdatePageLabel();
-            UpdateButtons();
+                UpdatePageLabel();
+                UpdateButtons();
+            }
         }
 
         private void SearchButton_Click(object sender, EventArgs e)
@@ -184,7 +190,7 @@ namespace corebankigtest.Forms
 
             int accountId = Convert.ToInt32(rowView["AccountId"]);
 
-            using (var frm = new TransactionManagementForm(accountId,_service,_transactionService))
+            using (var frm = new TransactionManagementForm(accountId, _accountService, _transactionService))
             {
                 var result = frm.ShowDialog();
                 if (result == DialogResult.OK)

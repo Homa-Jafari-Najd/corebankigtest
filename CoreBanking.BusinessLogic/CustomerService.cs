@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Data;
+using CoreBanking.Entities;
+using CoreBanking.DataAccess;
 using System.Text.RegularExpressions;
-using corebankigtest.DAL;
 
-namespace corebankigtest.BLL
+namespace CoreBanking.BusinessLogic
 {
     public class CustomerService
     {

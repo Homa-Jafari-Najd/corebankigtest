@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Runtime.Versioning;
 
-namespace corebankingtest.Utilities
+namespace CoreBanking.BusinessLogic
 {
+    [SupportedOSPlatform("windows")]
     public class CaptchaGenerator
     {
         private static readonly Random random = new Random();

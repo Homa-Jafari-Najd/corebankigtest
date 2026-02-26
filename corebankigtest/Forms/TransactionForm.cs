@@ -1,10 +1,6 @@
-﻿using System;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using corebankigtest.BLL;
-using corebankigtest.DAL.Factories;
-using corebankigtest.DAL.Abstractions;
+﻿using CoreBanking.BusinessLogic;
+using CoreBanking.DataAccess.Factories;
+using CoreBanking.DataAccess.Abstractions;
 using System.Configuration;
 
 namespace corebankigtest.Forms

@@ -99,6 +99,7 @@
             Controls.Add(btnShowTransaction);
             Name = "TransactionManagementForm";
             Text = "Transaction Management";
+            Load += TransactionManagementForm_Load;
             ((System.ComponentModel.ISupportInitialize)dgvTransactions).EndInit();
             ResumeLayout(false);
         }

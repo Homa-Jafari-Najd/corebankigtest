@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
-using corebankigtest.DAL.Abstractions;
+using CoreBanking.DataAccess.Abstractions;
 using Microsoft.Data.SqlClient;
 
-namespace corebankigtest.DAL.Factories
+
+namespace CoreBanking.DataAccess.Factories
 {
     public class SqlConnectionFactory : IDConnectionFactory
     {

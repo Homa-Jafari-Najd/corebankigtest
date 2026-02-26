@@ -1,9 +1,8 @@
 ﻿using System.Data;
-using corebankigtest.DAL.Abstractions;
-using corebankigtest.Entities;
-using Microsoft.Data.SqlClient;
+using CoreBanking.Entities;
+using CoreBanking.DataAccess.Abstractions;
 
-namespace corebankigtest.DAL
+namespace CoreBanking.DataAccess
 {
     public class TransactionRepository : ITransactionRepository
     {

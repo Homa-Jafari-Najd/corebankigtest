@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
-using corebankigtest.Entities;
+using CoreBanking.Entities;
 
-namespace corebankigtest.DAL.Abstractions
+namespace CoreBanking.DataAccess.Abstractions
 {
 
     public interface IAccountRepository

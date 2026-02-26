@@ -1,4 +1,5 @@
-﻿using corebankigtest.BLL;
+﻿using CoreBanking.BusinessLogic;
+
 using Microsoft.Identity.Client;
 
 namespace corebankigtest.Forms
@@ -9,13 +10,13 @@ namespace corebankigtest.Forms
         private readonly AccountService _accountService;
 
         private readonly TransactionService _transactionService;
-        public TransactionManagementForm(int accountId, AccountService accountService,TransactionService transactionService)
+        public TransactionManagementForm(int accountId, AccountService accountService, TransactionService transactionService)
         {
             InitializeComponent();
             _accountId = accountId;
             _accountService = accountService;
             _transactionService = transactionService;
-                
+
         }
         private void LoadTransactions()
         {
@@ -26,12 +27,12 @@ namespace corebankigtest.Forms
         private void btnShowTransaction_Click(object sender, EventArgs e)
         {
             LoadTransactions();
-                
+
         }
 
         private void btnInsert_Click(object sender, EventArgs e)
         {
-            using (var frm = new TransactionForm(_accountId,_transactionService,_accountService))
+            using (var frm = new TransactionForm(_accountId, _transactionService, _accountService))
             {
                 var result = frm.ShowDialog();
                 if (result == DialogResult.OK)
@@ -71,6 +72,11 @@ namespace corebankigtest.Forms
             }
         }
         private void dgvTransactions_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void TransactionManagementForm_Load(object sender, EventArgs e)
         {
 
         }

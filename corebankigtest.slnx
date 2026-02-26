@@ -1,5 +1,6 @@
 <Solution>
-  <Project Path="corebankigtest/corebankigtest.csproj" />
+  <Project Path="corebankigtest/corebankigtest.UI.csproj" />
   <Project Path="CoreBanking.BusinessLogic/CoreBanking.BusinessLogic.csproj" Id="f99ed81f-2a46-40b1-991e-abc8958a02ec" />
   <Project Path="CoreBanking.DataAccess/CoreBanking.DataAccess.csproj" Id="0286bc89-b643-4cb4-85ca-f233ca404fd4" />
+  <Project Path="CoreBanking.Entities/CoreBanking.Entities.csproj" Id="669fe7b5-7c50-45ca-b269-849977934e55" />
 </Solution>

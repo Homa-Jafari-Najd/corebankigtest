@@ -1,8 +1,10 @@
 ﻿using System.Data;
 using Microsoft.Data.Sqlite;
-using corebankigtest.DAL.Abstractions;
 
-namespace corebankigtest.DAL.Factories
+using CoreBanking.DataAccess.Abstractions;
+
+
+namespace CoreBanking.DataAccess.Factories
 {
     public class SqliteConnectionFactory : IDConnectionFactory
     {

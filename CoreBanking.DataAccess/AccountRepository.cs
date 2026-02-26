@@ -1,10 +1,10 @@
 ﻿using System.Data;
+using CoreBanking.Entities;
+using CoreBanking.DataAccess.Abstractions;
 using Microsoft.Data.SqlClient;
-using corebankigtest.Entities;
-using corebankigtest.DAL.Abstractions;
 
 
-namespace corebankigtest.DAL
+namespace CoreBanking.DataAccess
 {
     public class AccountRepository : IAccountRepository
     {

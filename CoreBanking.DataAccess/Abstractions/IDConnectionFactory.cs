@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using Microsoft.Data.SqlClient;
 
-namespace corebankigtest.DAL.Abstractions
+namespace CoreBanking.DataAccess.Abstractions
 {
     public interface IDConnectionFactory
     {

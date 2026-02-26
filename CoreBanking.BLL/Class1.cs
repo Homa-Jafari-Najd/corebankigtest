@@ -1,4 +1,4 @@
-﻿namespace CoreBanking.DataAccess
+﻿namespace CoreBanking.BLL
 {
     public class Class1
     {

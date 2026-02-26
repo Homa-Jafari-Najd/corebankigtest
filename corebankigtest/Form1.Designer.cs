@@ -110,10 +110,11 @@
             // 
             // captchaControl1
             // 
-            captchaControl1.Location = new Point(402, 305);
+            captchaControl1.Location = new Point(375, 228);
             captchaControl1.Name = "captchaControl1";
-            captchaControl1.Size = new Size(336, 117);
-            captchaControl1.TabIndex = 3;
+            captchaControl1.Size = new Size(353, 188);
+            captchaControl1.TabIndex = 6;
+            captchaControl1.Load += this.captchaControl2_Load_2;
             // 
             // LoginForm
             // 
@@ -134,6 +135,7 @@
             Name = "LoginForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Login Form";
+            Load += LoginForm_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();

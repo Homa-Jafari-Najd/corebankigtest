@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
-using System;
-namespace corebankigtest.Entities
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using CoreBanking.Entities;
+
+namespace CoreBanking.Entities
 {
     public static class BankData
     {

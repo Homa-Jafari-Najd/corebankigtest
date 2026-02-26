@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using CoreBanking.Entities;
 
 
 
-namespace corebankigtest.Entities
+
+
+namespace CoreBanking.Entities
 {
     public class Customer
     {

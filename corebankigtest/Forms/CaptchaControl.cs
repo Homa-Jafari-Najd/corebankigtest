@@ -1,4 +1,4 @@
-﻿using corebankigtest.BLL;
+﻿using CoreBanking.BusinessLogic;
 
 namespace corebankigtest.Forms
 {
@@ -8,7 +8,7 @@ namespace corebankigtest.Forms
         private TextBox txtCaptcha;
         private Button btnRefresh;
 
-        private string _currentCaptcha = "";
+        private string _currentCaptcha = string.Empty;
 
         public CaptchaControl()
         {
@@ -87,24 +87,24 @@ namespace corebankigtest.Forms
 
         public void FocusInput() => txtCaptcha.Focus();
 
-        private void btnRefresh_Click(object sender, EventArgs e)
+        private void btnRefresh_Click(object? sender, EventArgs e)
         {
             LoadCaptcha();
         }
 
 
 
-        private void txtCaptcha_TextChanged(object sender, EventArgs e)
+        private void txtCaptcha_TextChanged(object? sender, EventArgs e)
         {
 
         }
 
-        private void pictureBoxCaptcha_Click(object sender, EventArgs e)
+        private void pictureBoxCaptcha_Click(object? sender, EventArgs e)
         {
 
         }
 
-        private void CaptchaControl_Load(object sender, EventArgs e)
+        private void CaptchaControl_Load(object? sender, EventArgs e)
         {
 
         }

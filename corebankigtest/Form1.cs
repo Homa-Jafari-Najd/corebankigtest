@@ -1,21 +1,21 @@
-using corebankigtest.Entities;
+using CoreBanking.BusinessLogic;
 using corebankigtest.Forms;
-using corebankigtest.BLL;
+
 
 namespace corebankigtest
 {
     public partial class LoginForm : Form
     {
-        private readonly AccountService _service;
+        private readonly AccountService _accountService;
         private readonly TransactionService _transactionService;
         private string currentCaptcha;
-        public LoginForm(AccountService service,TransactionService transactionService)
+        public LoginForm(AccountService service, TransactionService transactionService)
         {
             InitializeComponent();
-            _service = service;
+            _accountService = service;
             _transactionService = transactionService;
             this.AcceptButton = Loginbutton;
-            
+
 
         }
         private void captchaControl1_Load(object sender, EventArgs e)
@@ -47,7 +47,7 @@ namespace corebankigtest
                 return;
             }
 
-            var user = _service.Login(username, password);
+            var user = _accountService.Login(username, password);
 
             if (user == null)
             {
@@ -59,7 +59,7 @@ namespace corebankigtest
 
             MessageBox.Show("Login Successful!");
             this.Hide();
-            var frm = new AccountManagmentForm(_service,_transactionService);
+            var frm = new AccountManagmentForm(_accountService, _transactionService);
             frm.ShowDialog();
             this.Close();
         }
@@ -71,10 +71,24 @@ namespace corebankigtest
         }
         public void ResetPassword()
         {
-            PasswordTextBox.Text= string.Empty;
+            PasswordTextBox.Text = string.Empty;
             PasswordTextBox.Focus();
         }
 
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void captchaControl2_Load_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void captchaControl2_Load_2(object sender, EventArgs e)
+        {
+
+        }
     }
 
 

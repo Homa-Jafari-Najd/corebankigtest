@@ -1,7 +1,8 @@
-﻿using corebankigtest.Entities;
-using corebankigtest.DAL.Abstractions;
+﻿using CoreBanking.Entities;
+using System.Collections.Generic;
+using CoreBanking.DataAccess.Abstractions;
 
-namespace corebankigtest.BLL
+namespace CoreBanking.BusinessLogic
 {
     public class TransactionService
     {

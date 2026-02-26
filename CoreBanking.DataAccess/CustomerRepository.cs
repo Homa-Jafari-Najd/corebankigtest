@@ -1,9 +1,11 @@
-﻿using System;
+﻿using System.Data;
+using CoreBanking.Entities;
+using CoreBanking.DataAccess.Abstractions;
+using Microsoft.Data.SqlClient;
 using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
 
-namespace corebankigtest.DAL
+
+namespace CoreBanking.DataAccess
 {
     public class CustomerRepository
     {

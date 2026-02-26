@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using CoreBanking.Entities;
 using System.Drawing;
-using corebankingtest.Utilities;
+using CoreBanking.BusinessLogic;
 
-namespace corebankigtest.BLL
+namespace CoreBanking.BusinessLogic
 {
    
-        internal static class CaptchaService
+        public static class CaptchaService
         {
             public static (string code, Image image) GenarateCaptcha()
             {

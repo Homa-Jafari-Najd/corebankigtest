@@ -1,9 +1,10 @@
-using corebankigtest;
-using corebankigtest.DAL;
-using corebankigtest.BLL;
-using corebankigtest.DAL.Abstractions;
-using corebankigtest.DAL.Factories;
+using CoreBanking.BusinessLogic;
+using CoreBanking.DataAccess;
+using CoreBanking.DataAccess.Abstractions;
 using System.Configuration;
+using CoreBanking.DataAccess.Factories;
+
+
 internal static class Program
 {
     [STAThread]
@@ -13,8 +14,8 @@ internal static class Program
         {
             ApplicationConfiguration.Initialize();
 
-            string provider = ConfigurationManager.AppSettings["DbProvider"];
-            string cs = ConfigurationManager.ConnectionStrings["dbcs"].ConnectionString;
+            string provider = ConfigurationManager.AppSettings["DbProvider"]?? string.Empty;
+            string cs = ConfigurationManager.ConnectionStrings["dbcs"]?.ConnectionString?? throw new Exception("Connection string not found");
 
             IDConnectionFactory factory;
 
@@ -28,7 +29,7 @@ internal static class Program
             var transactionRepository = new TransactionRepository(factory);
             var transactionService = new TransactionService(transactionRepository);
 
-            Application.Run(new LoginForm(accountService, transactionService));
+            Application.Run(new corebankigtest.LoginForm(accountService, transactionService));
         }
         catch (Exception ex)
         {

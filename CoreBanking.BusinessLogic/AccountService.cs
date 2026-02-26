@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Data;
-using corebankigtest.DAL;
-using corebankigtest.BLL;
-using corebankigtest.DAL.Abstractions;
-using corebankigtest.Entities;
+using CoreBanking.Entities;
+using CoreBanking.DataAccess.Abstractions;
+using CoreBanking.DataAccess;
 
-namespace corebankigtest.BLL
+namespace CoreBanking.BusinessLogic
 {
     public class AccountService
     {

@@ -141,7 +141,6 @@
 
         private Label label1;
         private FontDialog fontDialog1;
-        private Label label4;
         private ComboBox cmbAccount;
         private TextBox txtAmount;
         private System.Windows.Forms.Label lblAccount;

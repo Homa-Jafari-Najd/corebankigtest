@@ -1,6 +1,6 @@
 ﻿
 using System.ComponentModel;
-using corebankigtest.Entities;
+using CoreBanking.Entities;
 
 namespace corebankigtest.Forms
 {
@@ -8,7 +8,7 @@ namespace corebankigtest.Forms
     {
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Employee RegisterEmployee { get; set; }
+        public Employee? RegisterEmployee { get; set; }
         public RegisterForm()
         {
             InitializeComponent();

@@ -38,8 +38,7 @@ namespace corebankigtest.Forms
                 if (result == DialogResult.OK)
                 {
                     LoadTransactions();
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
+                  
                 }
             }
         }
@@ -73,7 +72,7 @@ namespace corebankigtest.Forms
         }
         private void dgvTransactions_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
+            
         }
 
         private void TransactionManagementForm_Load(object sender, EventArgs e)

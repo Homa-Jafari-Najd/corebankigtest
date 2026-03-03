@@ -22,6 +22,7 @@ namespace CoreBanking.BusinessLogic
         public void InsertTransaction(int accountId,decimal amount,string type)
         
            => _repo.Insert(accountId,amount,type);
-        
+        public void UpdateTransaction(int transactionId, decimal amount, string type)
+          => _repo.UpdateTransaction(transactionId, amount, type);       
     }
 }

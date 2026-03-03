@@ -105,45 +105,71 @@ namespace CoreBanking.DataAccess
             return accounts;
         }
 
-        public void UpdateBalance(int Id, decimal amount, string type)
+        public void UpdateTransaction(int accountId, decimal amount, string type)
         {
             using var con = _connectionFactory.CreateConnection();
-            using (var cmd = new SqlCommand())
-            {
-                cmd.Connection = (SqlConnection)con;
+            con.Open();
 
-                if (type == "Deposit")
-                {
-                    cmd.CommandText = "UPDATE Account SET Balance = Balance + @Amount WHERE Id = @Id";
-                }
-                else
-                {
-                    cmd.CommandText = "UPDATE Account SET Balance = Balance - @Amount WHERE Id = @Id";
-                }
+            using var cmd = con.CreateCommand();
+            cmd.CommandText = @"
+        UPDATE Transactions
+        SET Amount = @Amount,
+            Type = @Type
+        WHERE Id = @TransactionId;
 
-                cmd.Parameters.AddWithValue("@Amount", amount);
-                cmd.Parameters.AddWithValue("@Id", Id);
+        UPDATE Account
+        SET Balance = (
+            SELECT ISNULL(SUM(Amount), 0)
+            FROM Transactions
+            WHERE AccountId = (
+                SELECT AccountId FROM Transactions WHERE Id = @TransactionId
+            )
+        )
+        WHERE Id = (
+            SELECT AccountId FROM Transactions WHERE Id = @TransactionId
+        );
+    ";
 
-                con.Open();
-                cmd.ExecuteNonQuery();
-            }
+            var p1 = cmd.CreateParameter();
+            p1.ParameterName = "@Amount";
+            p1.Value = amount;
+            cmd.Parameters.Add(p1);
+
+            var p2 = cmd.CreateParameter();
+            p2.ParameterName = "@Type";
+            p2.Value = type;
+            cmd.Parameters.Add(p2);
+
+            var p3 = cmd.CreateParameter();
+            p3.ParameterName = "@TransactionId";
+            p3.Value = accountId;
+            cmd.Parameters.Add(p3);
+
+            cmd.ExecuteNonQuery();
         }
 
 
-        public decimal GetBalance(int Id)
+
+        public decimal GetBalance(int accountId)
         {
-            using SqlConnection cn = (SqlConnection)_connectionFactory.CreateConnection();
-            using (SqlCommand cmd = new SqlCommand("SELECT Balance FROM dbo.Account WHERE Id=@id", cn))
-            {
-                cmd.Parameters.AddWithValue("@id", Id);
-                cn.Open();
+            using var cn = (SqlConnection)_connectionFactory.CreateConnection();
+            using var cmd = new SqlCommand(@"
+        SELECT ISNULL(SUM(
+            CASE 
+                WHEN Type = 'Deposit' THEN Amount
+                WHEN Type = 'Withdraw' THEN -Amount
+            END
+        ), 0)
+        FROM Transactions
+        WHERE AccountId = @accountId", cn);
 
-                object result = cmd.ExecuteScalar();
-                if (result == null || result == DBNull.Value)
-                    throw new Exception("Account not found.");
+            cmd.Parameters.AddWithValue("@accountId", accountId);
 
-                return Convert.ToDecimal(result);
-            }
+            cn.Open();
+
+            object result = cmd.ExecuteScalar();
+
+            return Convert.ToDecimal(result);
         }
         public User? GetUserByUsernamePassword(string username, string password)
         {
@@ -171,5 +197,38 @@ namespace CoreBanking.DataAccess
                 IsActive = Convert.ToBoolean(r["ISActive"])
             };
         }
+
+    
+
+    public void UpdateBalance(int accountId, decimal amount, string type)
+        {
+            type = (type ?? "").Trim();
+            amount = Math.Abs(amount);
+
+            using var con = _connectionFactory.CreateConnection();
+            con.Open();
+
+            using var cmd = con.CreateCommand();
+
+            if (string.Equals(type, "Deposit", StringComparison.OrdinalIgnoreCase))
+                cmd.CommandText = "UPDATE Account SET Balance = Balance + @Amount WHERE Id = @accountId";
+            else if (string.Equals(type, "Withdraw", StringComparison.OrdinalIgnoreCase))
+                cmd.CommandText = "UPDATE Account SET Balance = Balance - @Amount WHERE Id = @accountId";
+            else
+                throw new Exception("Invalid transaction type: " + type);
+
+            var p1 = cmd.CreateParameter();
+            p1.ParameterName = "@Amount";
+            p1.Value = amount;
+            cmd.Parameters.Add(p1);
+
+            var p2 = cmd.CreateParameter();
+            p2.ParameterName = "@accountId";
+            p2.Value = accountId;
+            cmd.Parameters.Add(p2);
+
+            cmd.ExecuteNonQuery();
+        }
+
     }
 }

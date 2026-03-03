@@ -11,8 +11,9 @@ namespace CoreBanking.DataAccess.Abstractions
         List<AccountComboItem> GetAccountsForCombo();
         DataTable GetAccountsPaged(int pageNumber, int pageSize, string search);
         int GetTotalAccounts(string search);
-        void UpdateBalance(int Id, decimal amount, string type);
+        //void UpdateBalance(int accountId, decimal amount, string type);
         decimal GetBalance(int accountId);
         User? GetUserByUsernamePassword(string username, string password);
+        
     }
 }

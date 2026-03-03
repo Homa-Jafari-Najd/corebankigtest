@@ -12,6 +12,7 @@ namespace CoreBanking.DataAccess.Abstractions
         List<Transaction> GetByAccountId(int accountId);
         void DeleteTransactionAndRevertBalance(int transactionId);
         void Insert(int accountId, decimal amount, string type);
+        void UpdateTransaction(int transactionId, decimal amount, string type);
     }
 }
 

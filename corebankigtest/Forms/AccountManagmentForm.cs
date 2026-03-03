@@ -17,12 +17,31 @@ namespace corebankigtest.Forms
         private int totalPages = 1;
         private int totalRecords = 0;
         string currentSearch = "";
+        private int? _selectedAccountId = null;
+        private bool _isLoadingAccounts = false;
+
+        private void AccountDataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            if (_isLoadingAccounts) return;   // ✅ هنگام Load مقدار رو عوض نکن
+
+            if (AccountDataGridView.CurrentRow?.DataBoundItem is System.Data.DataRowView rowView)
+            {
+                _selectedAccountId = Convert.ToInt32(rowView["AccountId"]);
+            }
+        }
+        public void AccountDataGridView_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+        }
         public AccountManagmentForm(AccountService accountService, TransactionService transactionService)
         {
             InitializeComponent();
-
+            AccountDataGridView.AutoGenerateColumns = false;
             _accountService = accountService;
             _transactionService = transactionService;
+
+            AccountDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            AccountDataGridView.MultiSelect = false;
+            AccountDataGridView.ReadOnly = true;
         }
         private void AccountDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -31,6 +50,7 @@ namespace corebankigtest.Forms
 
         private void LoadAccountsFromDB(string search = "")
         {
+            _isLoadingAccounts = true;
 
             currentSearch = (search ?? "").Trim();
 
@@ -42,17 +62,26 @@ namespace corebankigtest.Forms
 
             AccountDataGridView.DataSource = null;
             AccountDataGridView.DataSource = dt;
+
+            // 👇 اضافه شده
+            if (_selectedAccountId == null && AccountDataGridView.Rows.Count > 0)
+            {
+                var rv = AccountDataGridView.Rows[0].DataBoundItem as System.Data.DataRowView;
+                if (rv != null)
+                    _selectedAccountId = Convert.ToInt32(rv["AccountId"]);
+            }
+
             if (AccountDataGridView.Columns.Contains("AccountId"))
             {
                 var col = AccountDataGridView.Columns["AccountId"];
                 if (col != null)
-                {
                     col.Visible = false;
-                }
-
-                UpdatePageLabel();
-                UpdateButtons();
             }
+
+            _isLoadingAccounts = false; // 👈 بیرون از if
+
+            UpdatePageLabel();
+            UpdateButtons();
         }
 
         private void SearchButton_Click(object sender, EventArgs e)
@@ -70,7 +99,7 @@ namespace corebankigtest.Forms
         }
         private void AccountManagementForm_Load(object sender, EventArgs e)
         {
-            SetupGridOnce();
+            //SetupGridOnce();
             pageNumber = 1;
             LoadAccountsFromDB("");
             UpdatePageLabel();
@@ -83,66 +112,80 @@ namespace corebankigtest.Forms
                 pageNumber--;
                 LoadAccountsFromDB(currentSearch);
                 UpdatePageLabel();
+                UpdateButtons();
             }
 
         }
 
-
-        private void SetupGridOnce()
-
+        private void AccountDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            AccountDataGridView.AutoGenerateColumns = false;
-            AccountDataGridView.Columns.Clear();
+            if (e.RowIndex < 0) return; // هدر
 
-            AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            AccountDataGridView.CurrentCell = AccountDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            AccountDataGridView.Rows[e.RowIndex].Selected = true;
+
+            if (AccountDataGridView.Rows[e.RowIndex].DataBoundItem is System.Data.DataRowView rv)
             {
-                HeaderText = "Account Number",
-                DataPropertyName = "AccountNumber"
-            });
-
-            AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                HeaderText = "Create Date",
-                DataPropertyName = "CreateDate",
-                DefaultCellStyle = { Format = "yyyy-MM-dd" }
-            });
-
-            AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                HeaderText = "First Name",
-                DataPropertyName = "FirstName"
-            });
-
-            AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                HeaderText = "Last Name",
-                DataPropertyName = "LastName"
-            });
-
-            AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                HeaderText = "National Code",
-                DataPropertyName = "NationalCode"
-            });
-
-            AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                HeaderText = "Account Type",
-                DataPropertyName = "AccountType"
-            });
-
-            AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                HeaderText = "Balance",
-                DataPropertyName = "Balance"
-            });
-
-            AccountDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            AccountDataGridView.AllowUserToAddRows = false;
-            AccountDataGridView.RowHeadersVisible = false;
-            AccountDataGridView.ReadOnly = true;
-            AccountDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                _selectedAccountId = Convert.ToInt32(rv["AccountId"]);
+            }
         }
+
+
+        //private void SetupGridOnce()
+
+        //{
+        //    AccountDataGridView.AutoGenerateColumns = false;
+        //    AccountDataGridView.Columns.Clear();
+
+        //    AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+        //    {
+        //        HeaderText = "Account Number",
+        //        DataPropertyName = "AccountNumber"
+        //    });
+
+        //    AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+        //    {
+        //        HeaderText = "Create Date",
+        //        DataPropertyName = "CreateDate",
+        //        DefaultCellStyle = { Format = "yyyy-MM-dd" }
+        //    });
+
+        //    AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+        //    {
+        //        HeaderText = "First Name",
+        //        DataPropertyName = "FirstName"
+        //    });
+
+        //    AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+        //    {
+        //        HeaderText = "Last Name",
+        //        DataPropertyName = "LastName"
+        //    });
+
+        //    AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+        //    {
+        //        HeaderText = "National Code",
+        //        DataPropertyName = "NationalCode"
+        //    });
+
+        //    AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+        //    {
+        //        HeaderText = "Account Type",
+        //        DataPropertyName = "AccountType"
+        //    });
+
+        //    AccountDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+        //    {
+        //        HeaderText = "Balance",
+        //        DataPropertyName = "Balance"
+        //    });
+
+        //    AccountDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+        //    AccountDataGridView.AllowUserToAddRows = false;
+        //    AccountDataGridView.RowHeadersVisible = false;
+        //    AccountDataGridView.ReadOnly = true;
+        //    AccountDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+        //}
 
 
         private void btnNext_Click(object sender, EventArgs e)
@@ -151,6 +194,8 @@ namespace corebankigtest.Forms
             {
                 pageNumber++;
                 LoadAccountsFromDB(currentSearch);
+                UpdatePageLabel();
+                UpdateButtons();
             }
 
         }
@@ -175,30 +220,29 @@ namespace corebankigtest.Forms
 
         private void btnTransaction_Click(object sender, EventArgs e)
         {
-            if (AccountDataGridView.CurrentRow == null)
+            if (_selectedAccountId == null)
             {
                 MessageBox.Show("Please select an account first.");
                 return;
             }
 
-            var rowView = AccountDataGridView.CurrentRow.DataBoundItem as System.Data.DataRowView;
-            if (rowView == null)
-            {
-                MessageBox.Show("Row binding is not DataRowView.");
-                return;
-            }
-
-            int accountId = Convert.ToInt32(rowView["AccountId"]);
+            int accountId = _selectedAccountId.Value;
 
             using (var frm = new TransactionManagementForm(accountId, _accountService, _transactionService))
             {
                 var result = frm.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    LoadAccountsFromDB();
+                    LoadAccountsFromDB(currentSearch);
                     UpdatePageLabel();
+                    _selectedAccountId = accountId; // نگه دار
                 }
             }
+        }
+
+        private void AccountManagmentForm_Enter(object sender, EventArgs e)
+        {
+            LoadAccountsFromDB();
         }
     }
 }

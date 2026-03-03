@@ -73,7 +73,7 @@
             RememberMecheckBox.Location = new Point(139, 245);
             RememberMecheckBox.Name = "RememberMecheckBox";
             RememberMecheckBox.Size = new Size(162, 29);
-            RememberMecheckBox.TabIndex = 2;
+            RememberMecheckBox.TabIndex = 4;
             RememberMecheckBox.Text = "Remember Me?";
             RememberMecheckBox.UseVisualStyleBackColor = true;
             // 
@@ -82,7 +82,7 @@
             Loginbutton.Location = new Point(145, 305);
             Loginbutton.Name = "Loginbutton";
             Loginbutton.Size = new Size(112, 34);
-            Loginbutton.TabIndex = 4;
+            Loginbutton.TabIndex = 3;
             Loginbutton.Text = "Login";
             Loginbutton.UseVisualStyleBackColor = true;
             Loginbutton.Click += Loginbutton_Click;
@@ -113,8 +113,8 @@
             captchaControl1.Location = new Point(375, 228);
             captchaControl1.Name = "captchaControl1";
             captchaControl1.Size = new Size(353, 188);
-            captchaControl1.TabIndex = 6;
-            captchaControl1.Load += this.captchaControl2_Load_2;
+            captchaControl1.TabIndex = 2;
+            captchaControl1.Load += captchaControl2_Load_2;
             // 
             // LoginForm
             // 

@@ -2,7 +2,7 @@
 using CoreBanking.DataAccess.Factories;
 using CoreBanking.DataAccess.Abstractions;
 using System.Configuration;
-
+using CoreBanking.Entities;   // یا هر namespace واقعی AccountComboItem
 namespace corebankigtest.Forms
 {
 
@@ -14,10 +14,10 @@ namespace corebankigtest.Forms
             
 
 
-        public TransactionForm(int accountId, TransactionService transactionService,AccountService accountService) 
+        public TransactionForm(int Id, TransactionService transactionService,AccountService accountService) 
         {
             InitializeComponent();
-            _accountId = accountId;
+            _accountId = Id;
             _transactionService = transactionService;
             _accountService = accountService;
 
@@ -33,13 +33,12 @@ namespace corebankigtest.Forms
         {
             var accounts = _accountService.GetAccountsForCombo();
 
-            MessageBox.Show("Accounts count = " + accounts.Count);
 
             cmbAccount.DropDownStyle = ComboBoxStyle.DropDownList;
 
             cmbAccount.DataSource = null;
             cmbAccount.DisplayMember = "DisplayText";
-            cmbAccount.ValueMember = "AccountId";
+            cmbAccount.ValueMember = "Id";
             cmbAccount.DataSource = accounts;
 
             if (accounts.Count > 0)
@@ -54,12 +53,22 @@ namespace corebankigtest.Forms
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
+            var item = cmbAccount.SelectedItem;
             try
             {
-                int accountId = _accountId;
-                decimal amount = decimal.Parse(txtAmount.Text.Trim());
+                if (cmbAccount.SelectedItem == null)
+                {
+                    MessageBox.Show("Please select an account.");
+                    return;
+                }
 
-                string type = cmbTransactionType.Text;
+                var selected = (AccountComboItem)cmbAccount.SelectedItem;
+                int accountId = selected.AccountId;
+
+                decimal amount = decimal.Parse(txtAmount.Text);
+                amount = Math.Abs(amount);
+
+                string type = cmbTransactionType.SelectedItem?.ToString()!;
 
                 _transactionService.InsertTransaction(accountId, amount, type);
 
@@ -73,7 +82,6 @@ namespace corebankigtest.Forms
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
         private void cmbAccount_SelectedIndexChanged(object sender, EventArgs e)
         {
 

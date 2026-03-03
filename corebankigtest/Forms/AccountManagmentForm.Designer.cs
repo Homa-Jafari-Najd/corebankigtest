@@ -38,6 +38,7 @@
             LastName = new DataGridViewTextBoxColumn();
             NationalCode = new DataGridViewTextBoxColumn();
             AccountType = new DataGridViewTextBoxColumn();
+            ColBalance = new DataGridViewTextBoxColumn();
             btnPrev = new Button();
             btnNext = new Button();
             lblPage = new Label();
@@ -81,17 +82,19 @@
             AccountDataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             AccountDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             AccountDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            AccountDataGridView.Columns.AddRange(new DataGridViewColumn[] { AccountNumber, OpeningDate, FirstName, LastName, NationalCode, AccountType });
+            AccountDataGridView.Columns.AddRange(new DataGridViewColumn[] { AccountNumber, OpeningDate, FirstName, LastName, NationalCode, AccountType, ColBalance });
             AccountDataGridView.Location = new Point(106, 88);
             AccountDataGridView.Name = "AccountDataGridView";
             AccountDataGridView.RowHeadersWidth = 62;
             AccountDataGridView.Size = new Size(985, 440);
             AccountDataGridView.TabIndex = 3;
+            AccountDataGridView.CellClick += AccountDataGridView_CellClick;
             AccountDataGridView.CellContentClick += AccountDataGridView_CellContentClick;
+            AccountDataGridView.SelectionChanged += AccountDataGridView_SelectionChanged;
             // 
             // AccountNumber
             // 
-            AccountNumber.DataPropertyName = "Account Number";
+            AccountNumber.DataPropertyName = "AccountNumber";
             AccountNumber.HeaderText = "Account Number";
             AccountNumber.MinimumWidth = 8;
             AccountNumber.Name = "AccountNumber";
@@ -105,18 +108,21 @@
             // 
             // FirstName
             // 
+            FirstName.DataPropertyName = "FirstName";
             FirstName.HeaderText = "First Name";
             FirstName.MinimumWidth = 8;
             FirstName.Name = "FirstName";
             // 
             // LastName
             // 
+            LastName.DataPropertyName = "LastName";
             LastName.HeaderText = "Last Name";
             LastName.MinimumWidth = 8;
             LastName.Name = "LastName";
             // 
             // NationalCode
             // 
+            NationalCode.DataPropertyName = "NationalCode";
             NationalCode.HeaderText = "National Code";
             NationalCode.MinimumWidth = 8;
             NationalCode.Name = "NationalCode";
@@ -127,6 +133,13 @@
             AccountType.HeaderText = "Account Type";
             AccountType.MinimumWidth = 8;
             AccountType.Name = "AccountType";
+            // 
+            // ColBalance
+            // 
+            ColBalance.DataPropertyName = "Balance";
+            ColBalance.HeaderText = "Balance";
+            ColBalance.MinimumWidth = 8;
+            ColBalance.Name = "ColBalance";
             // 
             // btnPrev
             // 
@@ -183,6 +196,7 @@
             Name = "AccountManagmentForm";
             Text = "AccountManagmentForm";
             Load += AccountManagementForm_Load;
+            Enter += AccountManagmentForm_Enter;
             ((System.ComponentModel.ISupportInitialize)AccountDataGridView).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -197,12 +211,13 @@
         private Button btnPrev;
         private Button btnNext;
         private Label lblPage;
+        private Button btnTransaction;
         private DataGridViewTextBoxColumn AccountNumber;
         private DataGridViewTextBoxColumn OpeningDate;
         private DataGridViewTextBoxColumn FirstName;
         private DataGridViewTextBoxColumn LastName;
         private DataGridViewTextBoxColumn NationalCode;
         private DataGridViewTextBoxColumn AccountType;
-        private Button btnTransaction;
+        private DataGridViewTextBoxColumn ColBalance;
     }
 }

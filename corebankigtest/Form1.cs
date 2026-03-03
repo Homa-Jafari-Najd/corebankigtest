@@ -8,7 +8,7 @@ namespace corebankigtest
     {
         private readonly AccountService _accountService;
         private readonly TransactionService _transactionService;
-        private string currentCaptcha;
+        private string? currentCaptcha;
         public LoginForm(AccountService service, TransactionService transactionService)
         {
             InitializeComponent();
